@@ -9,10 +9,110 @@
 	android:paddingLeft="@dimen/activity_horizontal_margin"
 	android:paddingRight="@dimen/activity_horizontal_margin"
 	android:paddingTop="@dimen/activity_vertical_margin"
+	android:background="#ffccbc"
 	tools:context="com.example.jiefly.multiparametermonitor.MainActivity">
+	<LinearLayout android:layout_width="match_parent"
+	              android:id="@+id/id_heart_rate_and_blood_pressure_ll"
+	              android:layout_height="wrap_content" android:orientation="horizontal">
+		<android.support.v7.widget.CardView
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_margin="5dp"
+			android:layout_height="@dimen/noraml_card_height">
+			<TextView android:layout_width="wrap_content"
+			          android:layout_gravity="center_horizontal"
+			          android:padding="10dp"
+			          android:textColor="#000"
+			          android:fontFamily="sans-serif-smallcaps"
+			          android:layout_height="wrap_content"
+			          android:text="心率"
+			/>
+			<ImageView
+				android:layout_width="60dp"
+				android:layout_height="60dp"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				android:layout_marginEnd="16dp"
+				android:layout_gravity="center_horizontal"
+				android:src="@drawable/heart_with_pulse"/>
+		</android.support.v7.widget.CardView>
+		<android.support.v7.widget.CardView
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_margin="5dp"
+			android:layout_height="@dimen/noraml_card_height">
+			<TextView android:layout_width="wrap_content"
+			          android:layout_gravity="center_horizontal"
+			          android:padding="10dp"
+			          android:textColor="#000"
+			          android:fontFamily="sans-serif-smallcaps"
+			          android:layout_height="wrap_content"
+			          android:text="血氧"
+			/>
+			<ImageView
+				android:layout_width="60dp"
+				android:layout_height="60dp"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				android:layout_marginEnd="16dp"
 
-	<TextView
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:text="Hello World!"/>
+				android:src="@drawable/medical_heart"/>
+		</android.support.v7.widget.CardView>
+	</LinearLayout>
+	<LinearLayout android:layout_width="match_parent"
+	              android:id="@+id/id_temperature_and_blood_oxygen_ll"
+	              android:layout_below="@id/id_heart_rate_and_blood_pressure_ll"
+	              android:layout_height="wrap_content" android:orientation="horizontal">
+		<android.support.v7.widget.CardView
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_margin="5dp"
+			android:layout_height="@dimen/noraml_card_height">
+			<TextView android:layout_width="wrap_content"
+			          android:layout_gravity="center_horizontal"
+			          android:padding="10dp"
+			          android:textColor="#000"
+			          android:fontFamily="sans-serif-smallcaps"
+			          android:layout_height="wrap_content"
+			          android:text="血压"
+			/>
+		</android.support.v7.widget.CardView>
+		<android.support.v7.widget.CardView
+			android:layout_width="0dp"
+			android:layout_weight="1"
+			android:layout_margin="5dp"
+			android:layout_height="@dimen/noraml_card_height">
+			<TextView android:layout_width="wrap_content"
+			          android:layout_gravity="center_horizontal"
+			          android:padding="10dp"
+			          android:textColor="#000"
+			          android:fontFamily="sans-serif-smallcaps"
+			          android:layout_height="wrap_content"
+			          android:text="体温"
+			/>
+			<ImageView
+				android:layout_width="60dp"
+				android:layout_height="60dp"
+				android:layout_marginStart="16dp"
+				android:layout_marginTop="16dp"
+				android:layout_marginEnd="16dp"
+
+				android:src="@drawable/temperature"/>
+		</android.support.v7.widget.CardView>
+	</LinearLayout>
+
+	<android.support.v7.widget.CardView
+		android:layout_below="@id/id_temperature_and_blood_oxygen_ll"
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/noraml_card_height" android:layout_marginLeft="5dp"
+		android:layout_marginRight="5dp" android:layout_marginTop="5dp">
+		<TextView android:layout_width="wrap_content"
+		          android:layout_gravity="center_horizontal"
+		          android:padding="10dp"
+		          android:textColor="#000"
+		          android:fontFamily="sans-serif-smallcaps"
+		          android:layout_height="wrap_content"
+		          android:text="心电"
+		/>
+	</android.support.v7.widget.CardView>
 </RelativeLayout>
