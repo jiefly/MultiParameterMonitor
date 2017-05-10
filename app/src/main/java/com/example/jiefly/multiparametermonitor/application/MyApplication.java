@@ -1,4 +1,4 @@
-package com.example.jiefly.multiparametermonitor.Application;
+package com.example.jiefly.multiparametermonitor.application;
 
 import android.app.Application;
 
