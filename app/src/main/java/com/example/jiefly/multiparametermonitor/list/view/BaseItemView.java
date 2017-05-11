@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -86,5 +87,10 @@ public abstract class BaseItemView extends LinearLayout{
     public void setmItemNameTextRes(int mItemNameTextRes) {
         this.mItemNameTextRes = mItemNameTextRes;
         mItemNameTv.setText(mItemNameTextRes);
+    }
+
+    @Override
+    public void setOnClickListener(@Nullable OnClickListener l) {
+        mConfirmBtn.setOnClickListener(l);
     }
 }
