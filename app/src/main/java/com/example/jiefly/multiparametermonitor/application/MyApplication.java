@@ -19,4 +19,9 @@ public class MyApplication extends Application {
                 .build();
         BluetoothLe.getDefault().init(this, config);
     }
+
+    @Override
+    public void registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks callback) {
+        super.registerActivityLifecycleCallbacks(callback);
+    }
 }
