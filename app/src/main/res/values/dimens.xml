@@ -3,5 +3,8 @@
 	<dimen name="activity_horizontal_margin">16dp</dimen>
 	<dimen name="activity_vertical_margin">16dp</dimen>
 	<dimen name="normal_card_width">200dp</dimen>
-	<dimen name="noraml_card_height">160dp</dimen>
+	<dimen name="normal_card_height">200dp</dimen>
+	<dimen name="big_image_size">120dp</dimen>
+	<dimen name="small_image_size">40dp</dimen>
+	<dimen name="button_radius">3dp</dimen>
 </resources>
