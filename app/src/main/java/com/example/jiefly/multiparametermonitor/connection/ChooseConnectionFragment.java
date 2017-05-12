@@ -18,7 +18,6 @@ public class ChooseConnectionFragment extends Fragment {
     private CardView mWifiConnection;
     private CardView mBleConnection;
     private ChooseConnectionViewer mViewer;
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);

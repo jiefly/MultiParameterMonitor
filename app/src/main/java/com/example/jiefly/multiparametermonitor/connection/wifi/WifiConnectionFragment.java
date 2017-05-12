@@ -1,6 +1,8 @@
 package com.example.jiefly.multiparametermonitor.connection.wifi;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -8,16 +10,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.jiefly.multiparametermonitor.R;
+import com.example.jiefly.multiparametermonitor.connection.Connection;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class WifiConnectionFragment extends Fragment implements View.OnClickListener {
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+
+public class WifiConnectionFragment extends Fragment implements View.OnClickListener, Connection {
     private static final String TAG = "WifiConnectionFragment";
+    private static Handler mHandler;
     private EditText mIpET;
     private EditText mPortET;
     private Button mConnectBtn;
@@ -26,6 +35,7 @@ public class WifiConnectionFragment extends Fragment implements View.OnClickList
     private int mServerPort;
     private volatile boolean connected;
     private Socket socket;
+    private WifiConnectionService mService;
 
 
     public WifiConnectionFragment() {
@@ -36,6 +46,13 @@ public class WifiConnectionFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                Toast.makeText(getActivity(), msg.getData().getString("data"), Toast.LENGTH_SHORT).show();
+            }
+        };
     }
 
     @Override
@@ -58,10 +75,12 @@ public class WifiConnectionFragment extends Fragment implements View.OnClickList
             case R.id.id_wifi_connect:
                 mServerIp = mIpET.getEditableText().toString();
                 mServerPort = Integer.valueOf(mPortET.getEditableText().toString());
-                connectServer();
+                mService = new WifiConnectionService();
+                mService.registerCallback(this).connect(mServerIp, mServerPort);
+//                connectServer();
                 break;
             case R.id.id_wifi_disconnect:
-                connected = false;
+                mService.disConnect();
                 break;
         }
     }
@@ -75,7 +94,14 @@ public class WifiConnectionFragment extends Fragment implements View.OnClickList
                     connected = true;
                     BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     String line = "";
+                    Message message;
+                    Bundle bundle = new Bundle();
                     while (socket.isConnected() && connected && (line = br.readLine()) != null) {
+                        message = Message.obtain();
+                        bundle.clear();
+                        bundle.putString("data", line);
+                        message.setData(bundle);
+                        mHandler.sendMessage(message);
                         Log.i(TAG, "data from Server:" + line);
                     }
                     br.close();
@@ -86,5 +112,64 @@ public class WifiConnectionFragment extends Fragment implements View.OnClickList
                 }
             }
         }).start();
+    }
+
+    @Override
+    public void sendData(String s) {
+
+    }
+
+    @Override
+    public void sendData(char[] data) {
+
+    }
+
+    @Override
+    public void onDataReceived(String s) {
+        Observable.just(s).subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        Toast.makeText(getActivity(), "receive data from server:" + s, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
+    public void onDeviceConnecting() {
+
+    }
+
+    @Override
+    public void onDeviceConnected() {
+        Observable.just("onDeviceConnected").subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
+    public void onDeviceDisconnected() {
+        Observable.just("onDeviceDisconnected").subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    @Override
+    public void onDeviceConnectError(String message) {
+        Observable.just(message).subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String s) {
+                        Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

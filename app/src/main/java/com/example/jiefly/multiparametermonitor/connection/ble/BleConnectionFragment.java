@@ -23,9 +23,11 @@ import android.widget.Toast;
 import com.example.jiefly.multiparametermonitor.R;
 import com.qindachang.bluetoothle.BluetoothLe;
 import com.qindachang.bluetoothle.OnLeConnectListener;
+import com.qindachang.bluetoothle.OnLeNotificationListener;
 import com.qindachang.bluetoothle.OnLeReadCharacteristicListener;
 import com.qindachang.bluetoothle.OnLeScanListener;
 import com.qindachang.bluetoothle.OnLeWriteCharacteristicListener;
+import com.qindachang.bluetoothle.exception.BleException;
 import com.qindachang.bluetoothle.exception.ConnBleException;
 import com.qindachang.bluetoothle.exception.ReadBleException;
 import com.qindachang.bluetoothle.exception.ScanBleException;
@@ -153,8 +155,8 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
 //                BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString(UUIDInfo.CHARACTERISTIC_IO));
 //                characteristic.setValue("fuck you");
 //                gatt.writeCharacteristic(characteristic);
-//                mBluetoothLe.writeDataToCharacteristic("fuck you!!!".getBytes(),UUIDInfo.SERVICE_IO,UUIDInfo.CHARACTERISTIC_IO);
-//                mBluetoothLe.readCharacteristic("6e400001-b5a3-f393-e0a9-e50e24dcca1e","6e400003-b5a3-f393-e0a9-e50e24dcca1e");
+                mBluetoothLe.writeDataToCharacteristic("fuck you!!!".getBytes(), UUIDInfo.SERVICE_IO, UUIDInfo.CHARACTERISTIC_IO);
+                mBluetoothLe.readCharacteristic(UUIDInfo.SERVICE_IO, UUIDInfo.CHARACTERISTIC_IO);
 //                mBluetoothLe.readCharacteristic("6e400001-b5a3-f393-e0a9-e50e24dcca1e","6e400002-b5a3-f393-e0a9-e50e24dcca1e");
 
             }
@@ -167,7 +169,7 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
         mBluetoothLe.setOnReadCharacteristicListener(new OnLeReadCharacteristicListener() {
             @Override
             public void onSuccess(BluetoothGattCharacteristic characteristic) {
-                Log.i(TAG, "成功读取特征" + characteristic.getStringValue(0));
+                Log.i(TAG, "成功读取特征" + characteristic.getValue());
             }
 
             @Override
@@ -184,6 +186,17 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
             @Override
             public void onFailed(WriteBleException e) {
                 Log.e(TAG, "写入数据失败");
+            }
+        });
+        mBluetoothLe.setOnNotificationListener(new OnLeNotificationListener() {
+            @Override
+            public void onSuccess(BluetoothGattCharacteristic characteristic) {
+                Log.i(TAG, "onNotificationSuccess:" + characteristic.getStringValue(0));
+            }
+
+            @Override
+            public void onFailed(BleException e) {
+                Log.i(TAG, "onNotificationError:" + e.getDetailMessage());
             }
         });
     }
