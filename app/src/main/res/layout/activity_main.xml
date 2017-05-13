@@ -10,7 +10,7 @@
 	android:paddingRight="@dimen/activity_horizontal_margin"
 	android:paddingTop="@dimen/activity_vertical_margin"
 	android:background="#ffccbc"
-	tools:context="com.example.jiefly.multiparametermonitor.MainActivity">
+    tools:context="com.example.jiefly.multiparametermonitor.main.MainActivity">
 	<LinearLayout android:layout_width="match_parent"
 	              android:id="@+id/id_heart_rate_and_blood_pressure_ll"
 	              android:layout_height="wrap_content" android:orientation="horizontal">

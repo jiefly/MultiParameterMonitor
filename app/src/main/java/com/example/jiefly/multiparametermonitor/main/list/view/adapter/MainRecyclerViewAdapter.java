@@ -1,4 +1,4 @@
-package com.example.jiefly.multiparametermonitor.list.view.adapter;
+package com.example.jiefly.multiparametermonitor.main.list.view.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,9 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.jiefly.multiparametermonitor.list.view.BaseItemView;
-import com.example.jiefly.multiparametermonitor.list.data.NormalItemData;
-import com.example.jiefly.multiparametermonitor.list.view.RecoredItemView;
+import com.example.jiefly.multiparametermonitor.main.list.data.NormalItemData;
+import com.example.jiefly.multiparametermonitor.main.list.view.BaseItemView;
+import com.example.jiefly.multiparametermonitor.main.list.view.RecordItemView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,7 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter {
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new MainRecyclerItemVH(new RecoredItemView(mContext), onClickSubject);
+        return new MainRecyclerItemVH(new RecordItemView(mContext), onClickSubject);
     }
 
     @Override

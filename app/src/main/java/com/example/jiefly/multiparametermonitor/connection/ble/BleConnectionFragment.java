@@ -1,10 +1,6 @@
 package com.example.jiefly.multiparametermonitor.connection.ble;
 
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
-import android.bluetooth.BluetoothGattService;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelUuid;
@@ -21,28 +17,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jiefly.multiparametermonitor.R;
+import com.example.jiefly.multiparametermonitor.connection.Connection;
+import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
 import com.qindachang.bluetoothle.BluetoothLe;
-import com.qindachang.bluetoothle.OnLeConnectListener;
-import com.qindachang.bluetoothle.OnLeNotificationListener;
-import com.qindachang.bluetoothle.OnLeReadCharacteristicListener;
 import com.qindachang.bluetoothle.OnLeScanListener;
-import com.qindachang.bluetoothle.OnLeWriteCharacteristicListener;
-import com.qindachang.bluetoothle.exception.BleException;
-import com.qindachang.bluetoothle.exception.ConnBleException;
-import com.qindachang.bluetoothle.exception.ReadBleException;
 import com.qindachang.bluetoothle.exception.ScanBleException;
-import com.qindachang.bluetoothle.exception.WriteBleException;
 import com.qindachang.bluetoothle.scanner.ScanRecord;
 import com.qindachang.bluetoothle.scanner.ScanResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.subjects.PublishSubject;
 
-public class BleConnectionFragment extends Fragment implements View.OnClickListener {
+public class BleConnectionFragment extends Fragment implements View.OnClickListener, OnConnectionListener {
     private static final String TAG = "BleConnectionFragment";
     private List<BluetoothDevice> mScannedDevices = new ArrayList<>();
     private BluetoothLe mBluetoothLe;
@@ -50,8 +41,11 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
     private RecyclerView mRv;
     private MyAdapter mAdapter;
     private PublishSubject<BluetoothDevice> onClickSubject = PublishSubject.create();
+    private Connection mConnection;
 
     public BleConnectionFragment() {
+        mConnection = new BleConnectionService();
+        mConnection.registerCallback(this);
         onClickSubject.asObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<BluetoothDevice>() {
             @Override
             public void onCompleted() {
@@ -65,7 +59,7 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
 
             @Override
             public void onNext(BluetoothDevice device) {
-                mBluetoothLe.startConnect(device);
+                mConnection.connectByBle(device, UUID.fromString(UUIDInfo.SERVICE_IO), UUID.fromString(UUIDInfo.CHARACTERISTIC_IO));
             }
         });
     }
@@ -113,99 +107,6 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
                 Log.e(TAG, "扫描错误：" + e.toString());
             }
         });
-        mBluetoothLe.setOnConnectListener(new OnLeConnectListener() {
-            @Override
-            public void onDeviceConnecting() {
-                Log.i(TAG, "设备连接中...");
-            }
-
-            @Override
-            public void onDeviceConnected() {
-                Log.i(TAG, "设备连接成功");
-            }
-
-            @Override
-            public void onDeviceDisconnected() {
-                Log.i(TAG, "设备断开连接...");
-            }
-
-            @Override
-            public void onServicesDiscovered(BluetoothGatt gatt) {
-                Log.i(TAG, "发现服务");
-                List<BluetoothGattService> services = gatt.getServices();
-                for (BluetoothGattService service : services) {
-                    Log.i(TAG, "->service uuid:" + service.getUuid());
-                    Log.i(TAG, "->service type:" + service.getType());
-                    List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
-                    for (BluetoothGattCharacteristic c : characteristics) {
-                        Log.i(TAG, "-->characteristic uuid:" + c.getUuid());
-                        if (c.getValue() != null)
-                            Log.i(TAG, "-->Characteristic value:" + new String(c.getValue()));
-                        List<BluetoothGattDescriptor> descriptors = c.getDescriptors();
-                        for (BluetoothGattDescriptor d : descriptors) {
-                            Log.i(TAG, "--->Descriptor uuid:" + d.getUuid());
-                            if (d.getValue() != null)
-                                Log.i(TAG, "--->Descriptor value:" + new String(d.getValue()));
-                        }
-                    }
-                }
-
-                // TODO: 17-5-11 test io
-//                BluetoothGattService service = gatt.getService(UUID.fromString(UUIDInfo.SERVICE_IO));
-//                BluetoothGattCharacteristic characteristic = service.getCharacteristic(UUID.fromString(UUIDInfo.CHARACTERISTIC_IO));
-//                characteristic.setValue("fuck you");
-//                gatt.writeCharacteristic(characteristic);
-                mBluetoothLe.writeDataToCharacteristic("fuck you!!!".getBytes(), UUIDInfo.SERVICE_IO, UUIDInfo.CHARACTERISTIC_IO);
-                mBluetoothLe.readCharacteristic(UUIDInfo.SERVICE_IO, UUIDInfo.CHARACTERISTIC_IO);
-//                mBluetoothLe.readCharacteristic("6e400001-b5a3-f393-e0a9-e50e24dcca1e","6e400002-b5a3-f393-e0a9-e50e24dcca1e");
-
-            }
-
-            @Override
-            public void onDeviceConnectFail(ConnBleException e) {
-                Log.i(TAG, "设备连接失败");
-            }
-        });
-        mBluetoothLe.setOnReadCharacteristicListener(new OnLeReadCharacteristicListener() {
-            @Override
-            public void onSuccess(BluetoothGattCharacteristic characteristic) {
-                Log.i(TAG, "成功读取特征" + characteristic.getValue());
-            }
-
-            @Override
-            public void onFailure(ReadBleException e) {
-                Log.e(TAG, "读取特征失败");
-            }
-        });
-        mBluetoothLe.setOnWriteCharacteristicListener(new OnLeWriteCharacteristicListener() {
-            @Override
-            public void onSuccess(BluetoothGattCharacteristic characteristic) {
-                Log.i(TAG, "成功写入数据" + characteristic.getStringValue(0));
-            }
-
-            @Override
-            public void onFailed(WriteBleException e) {
-                Log.e(TAG, "写入数据失败");
-            }
-        });
-        mBluetoothLe.setOnNotificationListener(new OnLeNotificationListener() {
-            @Override
-            public void onSuccess(BluetoothGattCharacteristic characteristic) {
-                Log.i(TAG, "onNotificationSuccess:" + characteristic.getStringValue(0));
-            }
-
-            @Override
-            public void onFailed(BleException e) {
-                Log.i(TAG, "onNotificationError:" + e.getDetailMessage());
-            }
-        });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mBluetoothLe.destroy();
-        mBluetoothLe.destroy(TAG);
     }
 
     private void scan() {
@@ -255,7 +156,7 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.id_disconnection:
                 Log.i(TAG, "断开连接");
-                mBluetoothLe.disconnect();
+                mConnection.disConnect();
                 break;
             default:
         }
@@ -275,6 +176,42 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
             }
         }
         return sb.toString();
+    }
+
+    @Override
+    public void sendData(String s) {
+
+    }
+
+    @Override
+    public void sendData(char[] data) {
+
+    }
+
+    @Override
+    public void onDataReceived(String s) {
+        Log.i(TAG, "receive data:" + s);
+    }
+
+    @Override
+    public void onDeviceConnecting() {
+        Log.i(TAG, "ble connecting");
+    }
+
+    @Override
+    public void onDeviceConnected() {
+        Log.i(TAG, "ble connected");
+
+    }
+
+    @Override
+    public void onDeviceDisconnected() {
+        Log.i(TAG, "ble disconnected");
+    }
+
+    @Override
+    public void onDeviceConnectError(String message) {
+        Log.w(TAG, "ble connect error:" + message);
     }
 
     private class MyAdapter extends RecyclerView.Adapter<MyVH> {

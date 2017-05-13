@@ -1,4 +1,4 @@
-package com.example.jiefly.multiparametermonitor.list.view;
+package com.example.jiefly.multiparametermonitor.main.list.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

@@ -1,30 +1,31 @@
 package com.example.jiefly.multiparametermonitor.connection.wifi;
 
 import android.app.Service;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.jiefly.multiparametermonitor.connection.Connection;
+import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.UUID;
 
 /**
  * Created by chgao on 17-5-12.
  */
 
-public class WifiConnectionService extends Service {
+public class WifiConnectionService extends Service implements Connection {
     private static String TAG = "WifiConnectionService";
     private Socket mSocket;
-    private Connection mConnection;
+    private OnConnectionListener mOnConnectionListener;
     private OutputStream mOutputStream;
-    private AtomicBoolean mClientClose;
 
     @Override
     public void onCreate() {
@@ -37,12 +38,12 @@ public class WifiConnectionService extends Service {
         return null;
     }
 
-    public WifiConnectionService registerCallback(Connection connection) {
-        mConnection = connection;
-        return this;
+    public void registerCallback(OnConnectionListener onConnectionListener) {
+        mOnConnectionListener = onConnectionListener;
     }
 
-    public void connect(final String ip, final int port) {
+    @Override
+    public void connectByWifi(final String ip, final int port) {
         if (mSocket != null && mSocket.isConnected()) {
             Log.e(TAG, "wifi is connected to server:" + mSocket.getRemoteSocketAddress().toString());
         }
@@ -50,24 +51,24 @@ public class WifiConnectionService extends Service {
             @Override
             public void run() {
                 try {
-                    mConnection.onDeviceConnecting();
+                    mOnConnectionListener.onDeviceConnecting();
                     mSocket = new Socket(ip, port);
-                    mConnection.onDeviceConnected();
+                    mOnConnectionListener.onDeviceConnected();
                     BufferedReader br = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
                     String line;
                     while (!mSocket.isClosed() && mSocket.isConnected() && (line = br.readLine()) != null) {
-                        mConnection.onDataReceived(line);
+                        mOnConnectionListener.onDataReceived(line);
                         sendData(line);
                         Log.i(TAG, "data from Server:" + line);
                     }
-                    mConnection.onDeviceDisconnected();
+                    mOnConnectionListener.onDeviceDisconnected();
                     br.close();
                     if (mSocket.isConnected()) {
                         mSocket.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    mConnection.onDeviceConnectError("connection error:" + e.getMessage());
+                    mOnConnectionListener.onDeviceConnectError("connection error:" + e.getMessage());
                     Log.e(TAG, "connection error:" + e.getMessage());
 
                 } catch (Exception e) {
@@ -75,8 +76,15 @@ public class WifiConnectionService extends Service {
                 }
             }
         }).start();
+
     }
 
+    @Override
+    public void connectByBle(BluetoothDevice device, UUID service, UUID charactist) {
+
+    }
+
+    @Override
     public void disConnect() {
         if (mSocket != null && mSocket.isConnected()) {
             try {
@@ -91,6 +99,7 @@ public class WifiConnectionService extends Service {
         }
     }
 
+    @Override
     public void sendData(String s) throws Exception {
         if (mSocket == null || !mSocket.isConnected()) {
             throw new Exception("Socket is null or socket did't connected");

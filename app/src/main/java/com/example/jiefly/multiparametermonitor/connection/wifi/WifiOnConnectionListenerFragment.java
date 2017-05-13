@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.jiefly.multiparametermonitor.R;
 import com.example.jiefly.multiparametermonitor.connection.Connection;
+import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,8 +25,8 @@ import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
-public class WifiConnectionFragment extends Fragment implements View.OnClickListener, Connection {
-    private static final String TAG = "WifiConnectionFragment";
+public class WifiOnConnectionListenerFragment extends Fragment implements View.OnClickListener, OnConnectionListener {
+    private static final String TAG = "WifiOnConnectionListenerFragment";
     private static Handler mHandler;
     private EditText mIpET;
     private EditText mPortET;
@@ -35,10 +36,10 @@ public class WifiConnectionFragment extends Fragment implements View.OnClickList
     private int mServerPort;
     private volatile boolean connected;
     private Socket socket;
-    private WifiConnectionService mService;
+    private Connection mService;
 
 
-    public WifiConnectionFragment() {
+    public WifiOnConnectionListenerFragment() {
 
     }
 
@@ -76,7 +77,8 @@ public class WifiConnectionFragment extends Fragment implements View.OnClickList
                 mServerIp = mIpET.getEditableText().toString();
                 mServerPort = Integer.valueOf(mPortET.getEditableText().toString());
                 mService = new WifiConnectionService();
-                mService.registerCallback(this).connect(mServerIp, mServerPort);
+                mService.registerCallback(this);
+                mService.connectByWifi(mServerIp, mServerPort);
 //                connectServer();
                 break;
             case R.id.id_wifi_disconnect:

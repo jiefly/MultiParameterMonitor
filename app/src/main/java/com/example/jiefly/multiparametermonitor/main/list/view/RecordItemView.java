@@ -1,16 +1,15 @@
-package com.example.jiefly.multiparametermonitor.list.view;
+package com.example.jiefly.multiparametermonitor.main.list.view;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.jiefly.multiparametermonitor.R;
-import com.example.jiefly.multiparametermonitor.list.data.NormalItemData;
+import com.example.jiefly.multiparametermonitor.main.list.data.NormalItemData;
 
 import static android.widget.RelativeLayout.CENTER_HORIZONTAL;
 
@@ -18,20 +17,21 @@ import static android.widget.RelativeLayout.CENTER_HORIZONTAL;
  * Created by chgao on 17-5-10.
  */
 
-public class RecoredItemView extends BaseItemView {
+public class RecordItemView extends BaseItemView {
     private LinearLayout mDescriptionLl;
     private TextView mDescriptionOneTv;
     private TextView mDescriptionTwoTv;
     private TextView mLastRecordTimeTv;
-    public RecoredItemView(Context context) {
+
+    public RecordItemView(Context context) {
         super(context);
     }
 
-    public RecoredItemView(Context context, @Nullable AttributeSet attrs) {
+    public RecordItemView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public RecoredItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RecordItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -54,8 +54,9 @@ public class RecoredItemView extends BaseItemView {
         super.fillData(data);
         //should show record info
         RelativeLayout.LayoutParams layoutParams;
-        if (data.ismRecored()){
+        if (data.ismRecord()) {
             layoutParams = new RelativeLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.small_image_size),getResources().getDimensionPixelSize(R.dimen.small_image_size));
+            layoutParams.setMargins(0, getResources().getDimensionPixelSize(R.dimen.small_icon_margin_top), 0, 0);
             layoutParams.addRule(CENTER_HORIZONTAL);
             mDescriptionLl.setVisibility(VISIBLE);
             mLastRecordTimeTv.setVisibility(VISIBLE);
@@ -65,6 +66,7 @@ public class RecoredItemView extends BaseItemView {
         }else {
             //hide record info
             layoutParams = new RelativeLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.big_image_size),getResources().getDimensionPixelSize(R.dimen.big_image_size));
+            layoutParams.setMargins(0, getResources().getDimensionPixelSize(R.dimen.big_icon_margin_top), 0, 0);
             layoutParams.addRule(CENTER_HORIZONTAL);
             mDescriptionLl.setVisibility(GONE);
             mLastRecordTimeTv.setVisibility(GONE);

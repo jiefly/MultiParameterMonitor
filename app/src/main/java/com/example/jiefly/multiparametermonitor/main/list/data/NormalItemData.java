@@ -1,4 +1,4 @@
-package com.example.jiefly.multiparametermonitor.list.data;
+package com.example.jiefly.multiparametermonitor.main.list.data;
 
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
@@ -7,14 +7,30 @@ import android.support.annotation.StringRes;
 
 import com.example.jiefly.multiparametermonitor.R;
 
+import java.io.Serializable;
+
 /**
  * Created by chgao on 17-5-10.
  */
 
-public class NormalItemData {
-    protected boolean mRecored;
+public class NormalItemData implements Serializable {
+    public static String RECORD = "record";
+    public static String ICON_RES = "icon_res";
+    public static String BUTTON_TEXT_RES = "button_text_res";
+    public static String BUTTON_RES = "button_res";
+    public static String ITEM_NAME_TEXT_RES = "item_name_text_res";
+    public static String LAYOUT_RES = "layout_res";
+    public static String RECORD_INFO = "record_info";
+    public static String LAST_RECORD_TIME = "last_record_time";
+
+    public enum Type {
+        UNKNOW, BLOOD_PRESURE, BLOOD_TEMPUTURE, HEART_REAT, BLOOD_OX, ECG
+    }
+
+    public Type mType = Type.UNKNOW;
+    protected boolean mRecord;
     @LayoutRes
-    protected int mIconRes = R.drawable.medical_heart;
+    protected int mIconRes = R.drawable.ic_heart;
     @StringRes
     protected int mButtonTextRes = R.string.test;
     @DrawableRes
@@ -25,8 +41,12 @@ public class NormalItemData {
     protected int mLayoutResId = R.layout.normal_item;
     @StringRes
     protected int mLastRecordUnit = R.string.unknow;
-    protected String mRecordInfo = "0/0";
-    protected String mLastRecordTime = "现在";
+    protected String mRecordInfo = "89/123";
+    protected String mLastRecordTime = "3 天前";
+
+
+    public NormalItemData() {
+    }
 
 
     public int getmIconRes() {
@@ -57,7 +77,7 @@ public class NormalItemData {
         return mItemNameTextRes;
     }
 
-    public void setmItemNameTextRes( int mItemNameTextRes) {
+    public void setmItemNameTextRes(int mItemNameTextRes) {
         this.mItemNameTextRes = mItemNameTextRes;
     }
 
@@ -65,16 +85,16 @@ public class NormalItemData {
         return mLayoutResId;
     }
 
-    public boolean ismRecored() {
-        return mRecored;
-    }
-
-    public void setmRecored(boolean mRecored) {
-        this.mRecored = mRecored;
-    }
-
     public void setmLayoutResId(int mLayoutResId) {
         this.mLayoutResId = mLayoutResId;
+    }
+
+    public boolean ismRecord() {
+        return mRecord;
+    }
+
+    public void setmRecord(boolean mRecord) {
+        this.mRecord = mRecord;
     }
 
     public int getmLastRecordUnit() {
@@ -99,5 +119,13 @@ public class NormalItemData {
 
     public void setmLastRecordTime(@NonNull String mLastRecordTime) {
         this.mLastRecordTime = mLastRecordTime;
+    }
+
+    public Type getmType() {
+        return mType;
+    }
+
+    public void setmType(Type mType) {
+        this.mType = mType;
     }
 }

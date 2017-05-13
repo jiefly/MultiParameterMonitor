@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.example.jiefly.multiparametermonitor.R;
 import com.example.jiefly.multiparametermonitor.connection.ble.BleConnectionFragment;
-import com.example.jiefly.multiparametermonitor.connection.wifi.WifiConnectionFragment;
+import com.example.jiefly.multiparametermonitor.connection.wifi.WifiOnConnectionListenerFragment;
 
 public class ConnectionActivity extends AppCompatActivity implements ChooseConnectionViewer {
     private static final String TAG = "ConnectionActivity";
@@ -58,7 +58,7 @@ public class ConnectionActivity extends AppCompatActivity implements ChooseConne
     public void connectionByWifi() {
         FragmentManager manager = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.id_container, new WifiConnectionFragment(), "wifi");
+        transaction.replace(R.id.id_container, new WifiOnConnectionListenerFragment(), "wifi");
         transaction.addToBackStack("WifiFragment");
         transaction.commit();
     }

@@ -1,4 +1,4 @@
-package com.example.jiefly.multiparametermonitor.list.view;
+package com.example.jiefly.multiparametermonitor.main.list.view;
 
 import android.content.Context;
 import android.support.annotation.DrawableRes;
@@ -8,14 +8,13 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.jiefly.multiparametermonitor.R;
-import com.example.jiefly.multiparametermonitor.list.data.NormalItemData;
+import com.example.jiefly.multiparametermonitor.main.list.data.NormalItemData;
 
 /**
  * Created by chgao on 17-5-9.

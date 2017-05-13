@@ -1,6 +1,7 @@
 package com.example.jiefly.multiparametermonitor.application;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import com.qindachang.bluetoothle.BluetoothConfig;
 import com.qindachang.bluetoothle.BluetoothLe;
@@ -10,6 +11,8 @@ import com.qindachang.bluetoothle.BluetoothLe;
  */
 
 public class MyApplication extends Application {
+    private final static String TAG = "MyApplication";
+    private static SharedPreferences mSharedPreferences;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -23,5 +26,13 @@ public class MyApplication extends Application {
     @Override
     public void registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks callback) {
         super.registerActivityLifecycleCallbacks(callback);
+    }
+
+    @Override
+    public SharedPreferences getSharedPreferences(String name, int mode) {
+        if (mSharedPreferences == null) {
+            mSharedPreferences = super.getSharedPreferences(TAG, MODE_PRIVATE);
+        }
+        return mSharedPreferences;
     }
 }

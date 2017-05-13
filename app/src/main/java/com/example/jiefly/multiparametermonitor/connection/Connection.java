@@ -1,21 +1,21 @@
 package com.example.jiefly.multiparametermonitor.connection;
 
+import android.bluetooth.BluetoothDevice;
+
+import java.util.UUID;
+
 /**
- * Created by chgao on 17-5-12.
+ * Created by chgao on 17-5-13.
  */
 
-public interface Connection<D> {
-    void sendData(String s);
+public interface Connection {
+    void registerCallback(OnConnectionListener listener);
 
-    void sendData(char[] data);
+    void connectByWifi(String arg1, int arg2);
 
-    void onDataReceived(String s);
+    void connectByBle(BluetoothDevice device, UUID service, UUID charactist);
 
-    void onDeviceConnecting();
+    void disConnect();
 
-    void onDeviceConnected();
-
-    void onDeviceDisconnected();
-
-    void onDeviceConnectError(String message);
+    void sendData(String data) throws Exception;
 }
