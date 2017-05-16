@@ -51,6 +51,8 @@
             android:name=".connection.wifi.WifiConnectionService"
             android:enabled="true"
             android:exported="true" />
+
+        <activity android:name=".measuring.MeasureMain"></activity>
     </application>
 
 </manifest>

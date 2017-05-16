@@ -1,4 +1,4 @@
-package com.example.jiefly.multiparametermonitor.main.list.view;
+package com.example.jiefly.multiparametermonitor.measuring;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -26,21 +26,20 @@ import java.util.Queue;
 
 public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
 
+    public static boolean isRunning;
+    private static Queue<Integer> ecg0Datas = new LinkedList<Integer>();
+    private static Queue<Integer> ecg1Datas = new LinkedList<Integer>();
+    private static SoundPool soundPool;
+    private static int soundId;//心跳提示音
     private Context mContext;
     private SurfaceHolder surfaceHolder;
-    public static boolean isRunning;
     private Canvas mCanvas;
-
     private float ecgMax = 4096;//心电的最大值
     private String bgColor = "#3FB57D";
     private int wave_speed = 25;//波速: 25mm/s
     private int sleepTime = 8; //每次锁屏的时间间距，单位:ms
     private float lockWidth;//每次锁屏需要画的
     private int ecgPerCount = 8;//每次画心电数据的个数，心电每秒有500个数据包
-
-    private static Queue<Integer> ecg0Datas = new LinkedList<Integer>();
-    private static Queue<Integer> ecg1Datas = new LinkedList<Integer>();
-
     private Paint mBackgroundPaint;//画背景的画笔
     private Paint mBackgroundDashPaint;
     private Path mBackgroundLinePath;
@@ -54,13 +53,28 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
     private int mUnitWidth;//心电图图纸每个小格的宽度
     private int mBigUnitWidth;//心电图图纸每个大格的宽度
     private Rect rect;
-
     private int startX;//每次画线的X坐标起点
     private double ecgXOffset;//每次X坐标偏移的像素
     private int blankLineWidth = 6;//右侧空白点的宽度
+    Runnable drawRunnable = new Runnable() {
+        @Override
+        public void run() {
+            while (isRunning) {
+                long startTime = System.currentTimeMillis();
 
-    private static SoundPool soundPool;
-    private static int soundId;//心跳提示音
+                startDrawWave();
+
+                long endTime = System.currentTimeMillis();
+                if (endTime - startTime < sleepTime) {
+                    try {
+                        Thread.sleep(sleepTime - (endTime - startTime));
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    };
 
     public EcgView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -69,6 +83,14 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
         this.surfaceHolder.addCallback(this);
         rect = new Rect();
         converXOffset();
+    }
+
+    public static void addEcgData0(int data) {
+        ecg0Datas.add(data);
+    }
+
+    public static void addEcgData1(int data) {
+        ecg1Datas.add(data);
     }
 
     private void init() {
@@ -96,9 +118,9 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
         soundId = soundPool.load(mContext, R.raw.heartbeat, 1);
 
         ecgXOffset = lockWidth / ecgPerCount;
-        startY0 = mHeight * (1 / 2);//波1初始Y坐标是控件高度的1/4
-//        startY1 = mHeight & (3 / 4);
-        ecgYRatio = mHeight / ecgMax;
+        startY0 = mHeight * (1 / 4);//波1初始Y坐标是控件高度的1/4
+        startY1 = mHeight & (3 / 4);
+        ecgYRatio = mHeight / 2 / ecgMax;
 
         yOffset1 = mHeight / 2;
     }
@@ -225,26 +247,6 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
         isRunning = false;
     }
 
-    Runnable drawRunnable = new Runnable() {
-        @Override
-        public void run() {
-            while (isRunning) {
-                long startTime = System.currentTimeMillis();
-
-                startDrawWave();
-
-                long endTime = System.currentTimeMillis();
-                if (endTime - startTime < sleepTime) {
-                    try {
-                        Thread.sleep(sleepTime - (endTime - startTime));
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-    };
-
     private void startDrawWave() {
         rect.set(startX, 0, (int) (startX + lockWidth + blankLineWidth), mHeight);
         mCanvas = surfaceHolder.lockCanvas(rect);
@@ -252,8 +254,7 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
         //mCanvas.drawColor(Color.parseColor(bgColor));
         drawBackground(mCanvas);
         drawWave0();
-        //drawWave1();
-
+        drawWave1();
         surfaceHolder.unlockCanvasAndPost(mCanvas);
 
         startX = (int) (startX + lockWidth);
@@ -329,14 +330,6 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
         data = (int) (ecgMax - data);
         data = (int) (data * ecgYRatio);
         return data;
-    }
-
-    public static void addEcgData0(int data) {
-        ecg0Datas.add(data);
-    }
-
-    public static void addEcgData1(int data) {
-        ecg1Datas.add(data);
     }
 
 }

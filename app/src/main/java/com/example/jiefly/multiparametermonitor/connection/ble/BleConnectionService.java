@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.example.jiefly.multiparametermonitor.connection.Connection;
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
-import com.example.jiefly.multiparametermonitor.sensor.CJMCU;
 import com.qindachang.bluetoothle.BluetoothLe;
 import com.qindachang.bluetoothle.OnLeConnectListener;
 import com.qindachang.bluetoothle.OnLeNotificationListener;
@@ -90,7 +89,8 @@ public class BleConnectionService extends Service implements Connection {
         mBluetoothLe.setOnNotificationListener(new OnLeNotificationListener() {
             @Override
             public void onSuccess(BluetoothGattCharacteristic characteristic) {
-                String realData = CJMCU.parserData(characteristic.getValue());
+                //String realData = CJMCU.parserData(characteristic.getValue());
+                String realData = characteristic.getStringValue(0);
                 Log.i(TAG, "onNotificationSuccess:" + realData);
                 mOnConnectionListener.onDataReceived(realData);
             }

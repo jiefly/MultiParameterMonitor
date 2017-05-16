@@ -1,6 +1,6 @@
 package com.example.jiefly.multiparametermonitor.main;
 
-import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,10 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.example.jiefly.multiparametermonitor.R;
+import com.example.jiefly.multiparametermonitor.connection.ConnectionActivity;
 import com.example.jiefly.multiparametermonitor.main.list.data.NormalItemData;
 import com.example.jiefly.multiparametermonitor.main.list.view.adapter.MainRecyclerViewAdapter;
 import com.example.jiefly.multiparametermonitor.util.ObjectHelper;
-import com.qindachang.bluetoothle.BluetoothLe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +23,6 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private BluetoothLe mBluetoothLe;
-    private BluetoothDevice mBluetoothDevice;
     private RecyclerView mRecyclerView;
     private MainRecyclerViewAdapter mAdapter;
 
@@ -50,50 +48,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNext(NormalItemData data) {
                 Log.i(TAG, "item clicked,item name:" + getResources().getString(data.getmItemNameTextRes()));
-//                Intent intent = new Intent();
-//                intent.setClass(MainActivity.this, ConnectionActivity.class);
-//                startActivity(intent);
-                data.setmRecord(!data.ismRecord());
-                mAdapter.notifyDataSetChanged();
+                Intent intent = new Intent();
+                intent.setClass(MainActivity.this, ConnectionActivity.class);
+                startActivity(intent);
+//                data.setmRecord(!data.ismRecord());
+//                mAdapter.notifyDataSetChanged();
             }
         });
         mRecyclerView.setAdapter(mAdapter);
-        /*mBluetoothLe = BluetoothLe.getDefault();
-        if (!mBluetoothLe.isSupportBluetooth()) {
-            //设备不支持蓝牙
-            Toast.makeText(this,"device not support ble",Toast.LENGTH_SHORT).show();
-        } else {
-            if (!mBluetoothLe.isBluetoothOpen()) {
-                //没有打开蓝牙，请求打开手机蓝牙
-                mBluetoothLe.enableBluetooth(this, 666);
-            }
-        }
-        //监听蓝牙回调
-        //监听扫描
-        mBluetoothLe.setOnScanListener(TAG, new OnLeScanListener() {
-            @RequiresApi(api = Build.VERSION_CODES.ECLAIR)
-            @Override
-            public void onScanResult(BluetoothDevice bluetoothDevice, int rssi, ScanRecord scanRecord) {
-                mBluetoothDevice = bluetoothDevice;
-                Log.i(TAG, "扫描到设备：" + mBluetoothDevice.getName());
-            }
-
-            @Override
-            public void onBatchScanResults(List<ScanResult> results) {
-                Log.i(TAG, "扫描到设备：" + results.toString());
-            }
-
-            @Override
-            public void onScanCompleted() {
-                Log.i(TAG, "停止扫描");
-            }
-
-            @Override
-            public void onScanFailed(ScanBleException e) {
-                Log.e(TAG, "扫描错误：" + e.toString());
-            }
-        });
-        scan();*/
     }
 
     @NonNull
@@ -166,12 +128,6 @@ public class MainActivity extends AppCompatActivity {
         return datas;
     }
 
-    private void scan() {
-        mBluetoothLe.setScanPeriod(20000)
-                //   .setScanWithServiceUUID(BluetoothUUID.SERVICE)
-                .setReportDelay(0)
-                .startScan(this);
-    }
 
     @Override
     protected void onResume() {

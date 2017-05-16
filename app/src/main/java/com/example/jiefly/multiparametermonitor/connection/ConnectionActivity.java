@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.jiefly.multiparametermonitor.R;
 import com.example.jiefly.multiparametermonitor.connection.ble.BleConnectionFragment;
 import com.example.jiefly.multiparametermonitor.connection.wifi.WifiOnConnectionListenerFragment;
+import com.example.jiefly.multiparametermonitor.measuring.MeasureEcg;
 
 public class ConnectionActivity extends AppCompatActivity implements ChooseConnectionViewer {
     private static final String TAG = "ConnectionActivity";
@@ -21,6 +22,15 @@ public class ConnectionActivity extends AppCompatActivity implements ChooseConne
         setContentView(R.layout.activity_connection);
         initToolBar();
         showChoose();
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        showMeasureEcg();
+    }
+
+    private void showMeasureEcg() {
+        FragmentManager manager = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.id_container, new MeasureEcg(), "MeasureEcg");
+        transaction.commit();
     }
 
     private void showChoose() {
@@ -37,7 +47,7 @@ public class ConnectionActivity extends AppCompatActivity implements ChooseConne
             @Override
             public void onClick(View v) {
                 Log.i(TAG, "back arrow clicked");
-                getSupportFragmentManager().popBackStack();
+                onBackPressed();
             }
         });
         setSupportActionBar(toolbar);
