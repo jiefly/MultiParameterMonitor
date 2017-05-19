@@ -1,5 +1,6 @@
 package com.example.jiefly.multiparametermonitor.connection;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,8 @@ import com.example.jiefly.multiparametermonitor.connection.ble.BleConnectionFrag
 import com.example.jiefly.multiparametermonitor.connection.wifi.WifiOnConnectionListenerFragment;
 import com.example.jiefly.multiparametermonitor.measuring.MeasureEcg;
 
+import pub.devrel.easypermissions.EasyPermissions;
+
 public class ConnectionActivity extends AppCompatActivity implements ChooseConnectionViewer {
     private static final String TAG = "ConnectionActivity";
 
@@ -23,7 +26,7 @@ public class ConnectionActivity extends AppCompatActivity implements ChooseConne
         initToolBar();
         showChoose();
 //        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        showMeasureEcg();
+//        showMeasureEcg();
     }
 
     private void showMeasureEcg() {
@@ -76,5 +79,15 @@ public class ConnectionActivity extends AppCompatActivity implements ChooseConne
     @Override
     public void backToChoose() {
 
+    }
+
+    private static final String[] locations = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+
+    public boolean checkLocationPermission() {
+        return EasyPermissions.hasPermissions(this, locations);
+    }
+
+    public void requestLocationPermission() {
+        EasyPermissions.requestPermissions(this, "Android 6.0以上扫描蓝牙需要该权限", Permission.LOCATION, locations);
     }
 }

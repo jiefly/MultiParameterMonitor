@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.jiefly.multiparametermonitor.connection.Connection;
+import com.example.jiefly.multiparametermonitor.connection.ConnectionBinder;
+import com.example.jiefly.multiparametermonitor.connection.ConnectionManager;
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
 
 import java.io.BufferedReader;
@@ -15,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -24,22 +28,32 @@ import java.util.UUID;
 public class WifiConnectionService extends Service implements Connection {
     private static String TAG = "WifiConnectionService";
     private Socket mSocket;
-    private OnConnectionListener mOnConnectionListener;
     private OutputStream mOutputStream;
+    private Set<OnConnectionListener> mConnectionListeners;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(TAG, "WifiConnectionService onCreate");
+        mConnectionListeners = new HashSet<>();
+        ConnectionManager.getInstance().addConnection(this);
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new ConnectionBinder(this);
     }
 
     public void registerCallback(OnConnectionListener onConnectionListener) {
-        mOnConnectionListener = onConnectionListener;
+        if (onConnectionListener != null) {
+            mConnectionListeners.add(onConnectionListener);
+        }
+    }
+
+    @Override
+    public void releaseCallback(OnConnectionListener listener) {
+        mConnectionListeners.remove(listener);
     }
 
     @Override
@@ -51,24 +65,34 @@ public class WifiConnectionService extends Service implements Connection {
             @Override
             public void run() {
                 try {
-                    mOnConnectionListener.onDeviceConnecting();
+                    for (OnConnectionListener listener : mConnectionListeners) {
+                        listener.onDeviceConnecting();
+                    }
                     mSocket = new Socket(ip, port);
-                    mOnConnectionListener.onDeviceConnected();
+                    for (OnConnectionListener listener : mConnectionListeners) {
+                        listener.onDeviceConnected();
+                    }
                     BufferedReader br = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
                     String line;
                     while (!mSocket.isClosed() && mSocket.isConnected() && (line = br.readLine()) != null) {
-                        mOnConnectionListener.onDataReceived(line);
+                        for (OnConnectionListener listener : mConnectionListeners) {
+                            listener.onDataReceived(line);
+                        }
                         sendData(line);
                         Log.i(TAG, "data from Server:" + line);
                     }
-                    mOnConnectionListener.onDeviceDisconnected();
+                    for (OnConnectionListener listener : mConnectionListeners) {
+                        listener.onDeviceDisconnected();
+                    }
                     br.close();
                     if (mSocket.isConnected()) {
                         mSocket.close();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
-                    mOnConnectionListener.onDeviceConnectError("connection error:" + e.getMessage());
+                    for (OnConnectionListener listener : mConnectionListeners) {
+                        listener.onDeviceConnectError("connection error:" + e.getMessage());
+                    }
                     Log.e(TAG, "connection error:" + e.getMessage());
 
                 } catch (Exception e) {
@@ -112,8 +136,20 @@ public class WifiConnectionService extends Service implements Connection {
     }
 
     @Override
+    public boolean isConnected() {
+        return mSocket != null && mSocket.isConnected();
+    }
+
+    @Override
+    public ConnectionType getConnectionType() {
+        return ConnectionType.WIFI;
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i(TAG, "WifiConnectionService onDestroy");
+        ConnectionManager.getInstance().destroyConnection(this);
         try {
             if (mSocket != null && mSocket.isConnected()) {
                 mSocket.close();

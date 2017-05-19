@@ -9,6 +9,8 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.example.jiefly.multiparametermonitor.connection.Connection;
+import com.example.jiefly.multiparametermonitor.connection.ConnectionBinder;
+import com.example.jiefly.multiparametermonitor.connection.ConnectionManager;
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
 import com.qindachang.bluetoothle.BluetoothLe;
 import com.qindachang.bluetoothle.OnLeConnectListener;
@@ -20,34 +22,43 @@ import com.qindachang.bluetoothle.exception.ConnBleException;
 import com.qindachang.bluetoothle.exception.ReadBleException;
 import com.qindachang.bluetoothle.exception.WriteBleException;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 public class BleConnectionService extends Service implements Connection {
     private static final String TAG = "BleConnectionService";
     private BluetoothLe mBluetoothLe;
-    private OnConnectionListener mOnConnectionListener;
+    private Set<OnConnectionListener> mConnectionListeners;
     private BluetoothGatt mIOGatt;
     private BluetoothGattCharacteristic mIOCharacteristic;
 
     public BleConnectionService() {
+        mConnectionListeners = new HashSet<>();
         mBluetoothLe = BluetoothLe.getDefault();
         mBluetoothLe.setOnConnectListener(new OnLeConnectListener() {
             @Override
             public void onDeviceConnecting() {
                 Log.i(TAG, "设备连接中...");
-                mOnConnectionListener.onDeviceConnecting();
+                for (OnConnectionListener listener : mConnectionListeners) {
+                    listener.onDeviceConnecting();
+                }
             }
 
             @Override
             public void onDeviceConnected() {
                 Log.i(TAG, "设备连接成功");
-                mOnConnectionListener.onDeviceConnected();
+                for (OnConnectionListener listener : mConnectionListeners) {
+                    listener.onDeviceConnected();
+                }
             }
 
             @Override
             public void onDeviceDisconnected() {
                 Log.i(TAG, "设备断开连接...");
-                mOnConnectionListener.onDeviceDisconnected();
+                for (OnConnectionListener listener : mConnectionListeners) {
+                    listener.onDeviceDisconnected();
+                }
             }
 
             @Override
@@ -61,7 +72,9 @@ public class BleConnectionService extends Service implements Connection {
             @Override
             public void onDeviceConnectFail(ConnBleException e) {
                 Log.i(TAG, "设备连接失败");
-                mOnConnectionListener.onDeviceConnectError(e.getDetailMessage());
+                for (OnConnectionListener listener : mConnectionListeners) {
+                    listener.onDeviceConnectError(e.getDetailMessage());
+                }
             }
         });
         mBluetoothLe.setOnReadCharacteristicListener(new OnLeReadCharacteristicListener() {
@@ -92,7 +105,9 @@ public class BleConnectionService extends Service implements Connection {
                 //String realData = CJMCU.parserData(characteristic.getValue());
                 String realData = characteristic.getStringValue(0);
                 Log.i(TAG, "onNotificationSuccess:" + realData);
-                mOnConnectionListener.onDataReceived(realData);
+                for (OnConnectionListener listener : mConnectionListeners) {
+                    listener.onDataReceived(realData);
+                }
             }
 
             @Override
@@ -100,12 +115,17 @@ public class BleConnectionService extends Service implements Connection {
                 Log.i(TAG, "onNotificationError:" + e.getDetailMessage());
             }
         });
+
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.i(TAG, "BleConnectionService onCreate");
+
+        ConnectionManager.getInstance().addConnection(this);
     }
+
 
     private void enableReceiveData(BluetoothGatt gatt, BluetoothGattCharacteristic mIOCharacteristic) {
         gatt.setCharacteristicNotification(mIOCharacteristic, true);
@@ -114,8 +134,13 @@ public class BleConnectionService extends Service implements Connection {
     @Override
     public void registerCallback(OnConnectionListener listener) {
         if (listener != null) {
-            mOnConnectionListener = listener;
+            mConnectionListeners.add(listener);
         }
+    }
+
+    @Override
+    public void releaseCallback(OnConnectionListener listener) {
+        mConnectionListeners.remove(listener);
     }
 
     @Override
@@ -140,13 +165,27 @@ public class BleConnectionService extends Service implements Connection {
     }
 
     @Override
+    public boolean isConnected() {
+        return mBluetoothLe.getConnected();
+    }
+
+    @Override
+    public ConnectionType getConnectionType() {
+        return ConnectionType.BLE;
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new ConnectionBinder(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.i(TAG, "BleConnectionService onDestroy");
         mBluetoothLe.destroy();
+        ConnectionManager.getInstance().destroyConnection(this);
     }
+
+
 }

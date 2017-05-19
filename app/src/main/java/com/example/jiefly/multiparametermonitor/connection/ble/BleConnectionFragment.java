@@ -1,12 +1,19 @@
 package com.example.jiefly.multiparametermonitor.connection.ble;
 
 import android.bluetooth.BluetoothDevice;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,7 +25,10 @@ import android.widget.Toast;
 
 import com.example.jiefly.multiparametermonitor.R;
 import com.example.jiefly.multiparametermonitor.connection.Connection;
+import com.example.jiefly.multiparametermonitor.connection.ConnectionActivity;
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
+import com.example.jiefly.multiparametermonitor.util.ApiLevelHelper;
+import com.example.jiefly.multiparametermonitor.util.LocationUtils;
 import com.qindachang.bluetoothle.BluetoothLe;
 import com.qindachang.bluetoothle.OnLeScanListener;
 import com.qindachang.bluetoothle.exception.ScanBleException;
@@ -42,10 +52,19 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
     private MyAdapter mAdapter;
     private PublishSubject<BluetoothDevice> onClickSubject = PublishSubject.create();
     private Connection mConnection;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mConnection = (Connection) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mConnection.releaseCallback(BleConnectionFragment.this);
+        }
+    };
 
     public BleConnectionFragment() {
-        mConnection = new BleConnectionService();
-        mConnection.registerCallback(this);
         onClickSubject.asObservable().observeOn(AndroidSchedulers.mainThread()).subscribe(new Subscriber<BluetoothDevice>() {
             @Override
             public void onCompleted() {
@@ -62,6 +81,15 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
                 mConnection.connectByBle(device, UUID.fromString(UUIDInfo.SERVICE_IO), UUID.fromString(UUIDInfo.CHARACTERISTIC_IO));
             }
         });
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), BleConnectionService.class);
+        //getActivity().bindService(intent,mServiceConnection,Context.BIND_AUTO_CREATE);
+        getActivity().startActivity(new Intent(getActivity(), BleConnectionService.class));
     }
 
     @Override
@@ -110,6 +138,27 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
     }
 
     private void scan() {
+        //对于Android 6.0以上的版本，申请地理位置动态权限
+        if (!((ConnectionActivity) (getActivity())).checkLocationPermission()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle("权限需求")
+                    .setMessage("Android 6.0 以上的系统版本，扫描蓝牙需要地理位置权限。请允许。")
+                    .setNeutralButton("取消", null)
+                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ((ConnectionActivity) (getActivity())).requestLocationPermission();
+                        }
+                    })
+                    .show();
+            return;
+        }
+        //如果系统版本是7.0以上，则请求打开位置信息
+        if (!LocationUtils.isOpenLocService(getActivity()) && ApiLevelHelper.isAtLeast(Build.VERSION_CODES.N)) {
+            Toast.makeText(getActivity(), "您的Android版本在7.0以上，扫描需要打开位置信息。", Toast.LENGTH_LONG).show();
+            LocationUtils.gotoLocServiceSettings(getActivity());
+            return;
+        }
         mBluetoothLe.setScanPeriod(20000)
                 //   .setScanWithServiceUUID(BluetoothUUID.SERVICE)
                 .setReportDelay(0)

@@ -11,6 +11,8 @@ import java.util.UUID;
 public interface Connection {
     void registerCallback(OnConnectionListener listener);
 
+    void releaseCallback(OnConnectionListener listener);
+
     void connectByWifi(String arg1, int arg2);
 
     void connectByBle(BluetoothDevice device, UUID service, UUID charactist);
@@ -18,4 +20,12 @@ public interface Connection {
     void disConnect();
 
     void sendData(String data) throws Exception;
+
+    boolean isConnected();
+
+    ConnectionType getConnectionType();
+
+    enum ConnectionType {
+        WIFI, BLE, UNKONW
+    }
 }
