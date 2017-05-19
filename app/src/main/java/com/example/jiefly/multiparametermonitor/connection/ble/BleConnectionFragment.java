@@ -86,10 +86,6 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Intent intent = new Intent();
-        intent.setClass(getActivity(), BleConnectionService.class);
-        //getActivity().bindService(intent,mServiceConnection,Context.BIND_AUTO_CREATE);
-        getActivity().startActivity(new Intent(getActivity(), BleConnectionService.class));
     }
 
     @Override
@@ -138,6 +134,8 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
     }
 
     private void scan() {
+        getActivity().startService(new Intent(getActivity(), BleConnectionService.class));
+        getActivity().bindService(new Intent(getActivity(), BleConnectionService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
         //对于Android 6.0以上的版本，申请地理位置动态权限
         if (!((ConnectionActivity) (getActivity())).checkLocationPermission()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -178,6 +176,12 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
         mRv = (RecyclerView) view.findViewById(R.id.id_ble_connection_rv);
         initView(view);
         return view;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        getActivity().unbindService(mServiceConnection);
     }
 
     private void initView(View root) {

@@ -97,6 +97,10 @@ public class ConnectionManager {
         }
     }
 
+    public Connection getConnection() {
+        return mConnection;
+    }
+
     public boolean isConnected() {
         return mConnection != null && mConnection.isConnected();
     }

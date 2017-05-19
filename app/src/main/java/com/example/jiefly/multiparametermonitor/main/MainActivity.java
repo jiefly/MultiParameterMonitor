@@ -1,20 +1,22 @@
 package com.example.jiefly.multiparametermonitor.main;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.jiefly.multiparametermonitor.ECGTestActivity;
 import com.example.jiefly.multiparametermonitor.R;
 import com.example.jiefly.multiparametermonitor.connection.ConnectionActivity;
 import com.example.jiefly.multiparametermonitor.connection.ConnectionManager;
@@ -33,6 +35,8 @@ import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    public static final int CONNECTION = 0x1001;
+    public static final int CONNECTION_AND_TO_ECG = 0x1010;
     private RecyclerView mRecyclerView;
     private MainRecyclerViewAdapter mAdapter;
     private Toolbar mToolbar;
@@ -62,15 +66,48 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onNext(NormalItemData data) {
-                Log.i(TAG, "item clicked,item name:" + getResources().getString(data.getmItemNameTextRes()));
-                Intent intent = new Intent();
-                intent.setClass(MainActivity.this, ConnectionActivity.class);
-                startActivity(intent);
-//                data.setmRecord(!data.ismRecord());
-//                mAdapter.notifyDataSetChanged();
+                if (ConnectionManager.getInstance().isConnected()) {
+
+                } else {
+                    showConnectDeviceDialog(data);
+                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+    }
+
+    private void showConnectDeviceDialog(NormalItemData data) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("当前设备未连接");
+        builder.setMessage("在测量" + getResources().getString(data.getmItemNameTextRes()) + "前请先连接上设备");
+        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivityForResult(new Intent(MainActivity.this, ConnectionActivity.class), CONNECTION_AND_TO_ECG);
+            }
+        });
+        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        builder.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CONNECTION:
+                    break;
+                case CONNECTION_AND_TO_ECG:
+                    startActivity(new Intent(MainActivity.this, ECGTestActivity.class));
+                    break;
+                default:
+            }
+        }
     }
 
     @Override

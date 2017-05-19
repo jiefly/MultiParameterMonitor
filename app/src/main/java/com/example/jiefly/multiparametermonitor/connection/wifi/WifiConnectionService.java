@@ -60,6 +60,7 @@ public class WifiConnectionService extends Service implements Connection {
     public void connectByWifi(final String ip, final int port) {
         if (mSocket != null && mSocket.isConnected()) {
             Log.e(TAG, "wifi is connected to server:" + mSocket.getRemoteSocketAddress().toString());
+            return;
         }
         new Thread(new Runnable() {
             @Override
@@ -126,6 +127,9 @@ public class WifiConnectionService extends Service implements Connection {
     @Override
     public void sendData(String s) throws Exception {
         if (mSocket == null || !mSocket.isConnected()) {
+            for (OnConnectionListener listener : mConnectionListeners) {
+                listener.onDeviceDisconnected();
+            }
             throw new Exception("Socket is null or socket did't connected");
         }
         if (mOutputStream == null) {

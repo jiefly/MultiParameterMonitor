@@ -1,8 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.jiefly.multiparametermonitor.onConnectionListener.wifi.WifiOnConnectionListenerFragment">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:padding="20dp"
@@ -11,10 +9,13 @@
         android:orientation="horizontal">
 
         <EditText
+
+            android:inputType="number"
             android:id="@+id/id_wifi_server_ip"
             android:padding="10dp"
             android:layout_width="0dp"
             android:layout_weight="3"
+            android:text="192.168.1.105"
             android:layout_height="wrap_content" />
 
         <TextView
@@ -24,6 +25,8 @@
             android:layout_height="wrap_content" />
 
         <EditText
+            android:text="9876"
+            android:inputType="number"
             android:id="@+id/id_wifi_server_port"
             android:padding="10dp"
             android:layout_width="0dp"

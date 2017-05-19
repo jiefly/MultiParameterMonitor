@@ -1,10 +1,15 @@
 package com.example.jiefly.multiparametermonitor.connection.wifi;
 
+import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +20,6 @@ import android.widget.Toast;
 import com.example.jiefly.multiparametermonitor.R;
 import com.example.jiefly.multiparametermonitor.connection.Connection;
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Socket;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -34,15 +34,31 @@ public class WifiOnConnectionListenerFragment extends Fragment implements View.O
     private Button mDisconnectBtn;
     private String mServerIp;
     private int mServerPort;
-    private volatile boolean connected;
-    private Socket socket;
-    private Connection mService;
+    private Connection mConnection;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mConnection = (Connection) service;
+            mConnection.registerCallback(WifiOnConnectionListenerFragment.this);
+        }
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mConnection.releaseCallback(WifiOnConnectionListenerFragment.this);
+        }
+    };
 
     public WifiOnConnectionListenerFragment() {
 
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        getActivity().startService(new Intent(getActivity(), WifiConnectionService.class));
+        getActivity().bindService(new Intent(getActivity(), WifiConnectionService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,49 +87,31 @@ public class WifiOnConnectionListenerFragment extends Fragment implements View.O
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        getActivity().unbindService(mServiceConnection);
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.id_wifi_connect:
                 mServerIp = mIpET.getEditableText().toString();
                 mServerPort = Integer.valueOf(mPortET.getEditableText().toString());
-                mService = new WifiConnectionService();
-                mService.registerCallback(this);
-                mService.connectByWifi(mServerIp, mServerPort);
-//                connectServer();
+                mConnection.connectByWifi(mServerIp, mServerPort);
                 break;
             case R.id.id_wifi_disconnect:
-                mService.disConnect();
+                mConnection.disConnect();
                 break;
         }
     }
 
-    private void connectServer() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    socket = new Socket(mServerIp, mServerPort);
-                    connected = true;
-                    BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                    String line = "";
-                    Message message;
-                    Bundle bundle = new Bundle();
-                    while (socket.isConnected() && connected && (line = br.readLine()) != null) {
-                        message = Message.obtain();
-                        bundle.clear();
-                        bundle.putString("data", line);
-                        message.setData(bundle);
-                        mHandler.sendMessage(message);
-                        Log.i(TAG, "data from Server:" + line);
-                    }
-                    br.close();
-                    socket.close();
-                } catch (IOException e) {
-                    Log.e(TAG, e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mConnection != null) {
+            mConnection.releaseCallback(this);
+        }
     }
 
     @Override
@@ -151,6 +149,8 @@ public class WifiOnConnectionListenerFragment extends Fragment implements View.O
                         Toast.makeText(getActivity(), s, Toast.LENGTH_SHORT).show();
                     }
                 });
+        getActivity().setResult(Activity.RESULT_OK);
+        getActivity().finish();
     }
 
     @Override
