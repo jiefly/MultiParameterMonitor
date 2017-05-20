@@ -76,11 +76,11 @@ public class WifiConnectionService extends Service implements Connection {
                     BufferedReader br = new BufferedReader(new InputStreamReader(mSocket.getInputStream()));
                     String line;
                     while (!mSocket.isClosed() && mSocket.isConnected() && (line = br.readLine()) != null) {
+                        sendData(line);
+                        Log.i(TAG, "data from Server:" + line);
                         for (OnConnectionListener listener : mConnectionListeners) {
                             listener.onDataReceived(line);
                         }
-                        sendData(line);
-                        Log.i(TAG, "data from Server:" + line);
                     }
                     for (OnConnectionListener listener : mConnectionListeners) {
                         listener.onDeviceDisconnected();

@@ -16,12 +16,12 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import com.example.jiefly.multiparametermonitor.ECGTestActivity;
 import com.example.jiefly.multiparametermonitor.R;
 import com.example.jiefly.multiparametermonitor.connection.ConnectionActivity;
 import com.example.jiefly.multiparametermonitor.connection.ConnectionManager;
 import com.example.jiefly.multiparametermonitor.main.list.data.NormalItemData;
 import com.example.jiefly.multiparametermonitor.main.list.view.adapter.MainRecyclerViewAdapter;
+import com.example.jiefly.multiparametermonitor.measuring.MeasureMain;
 import com.example.jiefly.multiparametermonitor.util.ObjectHelper;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -103,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                 case CONNECTION:
                     break;
                 case CONNECTION_AND_TO_ECG:
-                    startActivity(new Intent(MainActivity.this, ECGTestActivity.class));
+                    startActivity(new Intent(MainActivity.this, MeasureMain.class));
                     break;
                 default:
             }

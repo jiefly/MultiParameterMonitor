@@ -35,7 +35,6 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
     private SurfaceHolder surfaceHolder;
     private Canvas mCanvas;
     private float ecgMax = 4096;//心电的最大值
-    private String bgColor = "#3FB57D";
     private int wave_speed = 25;//波速: 25mm/s
     private int sleepTime = 8; //每次锁屏的时间间距，单位:ms
     private float lockWidth;//每次锁屏需要画的

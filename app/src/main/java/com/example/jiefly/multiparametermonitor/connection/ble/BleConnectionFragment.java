@@ -181,7 +181,9 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
     @Override
     public void onDetach() {
         super.onDetach();
-        getActivity().unbindService(mServiceConnection);
+        if (mConnection != null) {
+            getActivity().unbindService(mServiceConnection);
+        }
     }
 
     private void initView(View root) {

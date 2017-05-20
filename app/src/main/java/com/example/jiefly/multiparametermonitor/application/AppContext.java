@@ -10,12 +10,14 @@ import com.qindachang.bluetoothle.BluetoothLe;
  * Created by chgao on 17-5-8.
  */
 
-public class MyApplication extends Application {
-    private final static String TAG = "MyApplication";
+public class AppContext extends Application {
+    private final static String TAG = "AppContext";
     private static SharedPreferences mSharedPreferences;
+    private static Application instance;
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         BluetoothConfig config = new BluetoothConfig.Builder()
                 .enableQueueInterval(true)//开启队列定时
                 .setQueueIntervalTime(150)//设置定时150ms时长（才会发下一条），单位ms
@@ -34,5 +36,10 @@ public class MyApplication extends Application {
             mSharedPreferences = super.getSharedPreferences(TAG, MODE_PRIVATE);
         }
         return mSharedPreferences;
+    }
+
+    public static int dp2px(float dpvalue) {
+        return (int) (dpvalue
+                * instance.getResources().getDisplayMetrics().density + 0.5f);
     }
 }
