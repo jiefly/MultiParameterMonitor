@@ -18,6 +18,15 @@
 
     </android.support.v7.widget.RecyclerView>
 
+    <View
+        android:layout_below="@id/id_tool_bar"
+        android:id="@+id/id_main_cover"
+        android:visibility="gone"
+        android:clickable="true"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/id_main_menu"
         android:layout_width="wrap_content"
@@ -25,9 +34,9 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="10dp"
-        app:fab_addButtonColorNormal="@color/white"
-        app:fab_addButtonColorPressed="@color/white_pressed"
-        app:fab_addButtonPlusIconColor="@color/half_black"
+        app:fab_addButtonColorNormal="@color/colorPrimaryDark"
+        app:fab_addButtonColorPressed="@color/colorPrimary"
+        app:fab_addButtonPlusIconColor="@color/white"
         app:fab_addButtonSize="normal"
         app:fab_labelsPosition="left"
         app:fab_labelStyle="@style/menu_labels_style"

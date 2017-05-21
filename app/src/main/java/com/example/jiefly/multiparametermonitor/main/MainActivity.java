@@ -34,14 +34,15 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
     public static final int CONNECTION = 0x1001;
-    public static final int CONNECTION_AND_TO_ECG = 0x1010;
+    public static final int CONNECTION_AND_TO_MEASURE = 0x1010;
     private RecyclerView mRecyclerView;
     private MainRecyclerViewAdapter mAdapter;
     private Toolbar mToolbar;
     private TextView mToolbarTitle;
     private FloatingActionsMenu mMenu;
+    private NormalItemData.Type mWillMeasureType;
+    private View mCover;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main);
         initToolBar();
         initMenu();
+        mCover = findViewById(R.id.id_main_cover);
         mRecyclerView = (RecyclerView) findViewById(R.id.id_main_rv);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mAdapter = new MainRecyclerViewAdapter(this);
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNext(NormalItemData data) {
                 if (ConnectionManager.getInstance().isConnected()) {
-
+                    jumpToMeasure(data.getmType());
                 } else {
                     showConnectDeviceDialog(data);
                 }
@@ -76,14 +78,21 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    private void jumpToMeasure(NormalItemData.Type type) {
+        Intent intent = new Intent(this, MeasureMain.class);
+        intent.putExtra(MeasureMain.MEASURE_TYPE, type.getValue());
+        startActivity(intent);
+    }
+
     private void showConnectDeviceDialog(NormalItemData data) {
+        mWillMeasureType = data.getmType();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("当前设备未连接");
         builder.setMessage("在测量" + getResources().getString(data.getmItemNameTextRes()) + "前请先连接上设备");
         builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                startActivityForResult(new Intent(MainActivity.this, ConnectionActivity.class), CONNECTION_AND_TO_ECG);
+                startActivityForResult(new Intent(MainActivity.this, ConnectionActivity.class), CONNECTION_AND_TO_MEASURE);
             }
         });
         builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
@@ -102,8 +111,8 @@ public class MainActivity extends AppCompatActivity {
             switch (requestCode) {
                 case CONNECTION:
                     break;
-                case CONNECTION_AND_TO_ECG:
-                    startActivity(new Intent(MainActivity.this, MeasureMain.class));
+                case CONNECTION_AND_TO_MEASURE:
+                    startActivity(new Intent(MainActivity.this, MeasureMain.class).putExtra(MeasureMain.MEASURE_TYPE, mWillMeasureType.getValue()));
                     break;
                 default:
             }
@@ -126,11 +135,34 @@ public class MainActivity extends AppCompatActivity {
         return super.onCreateView(name, context, attrs);
     }
 
+    private void toggleCover(boolean show) {
+        if (mCover == null) {
+            mCover = findViewById(R.id.id_main_cover);
+        }
+        if (show) {
+            mCover.setVisibility(View.VISIBLE);
+            mCover.setAlpha(0.9f);
+        } else {
+            mCover.setVisibility(View.GONE);
+        }
+    }
     private void initMenu() {
         mMenu = (FloatingActionsMenu) findViewById(R.id.id_main_menu);
+        mMenu.setOnFloatingActionsMenuUpdateListener(new FloatingActionsMenu.OnFloatingActionsMenuUpdateListener() {
+            @Override
+            public void onMenuExpanded() {
+                toggleCover(true);
+            }
+
+            @Override
+            public void onMenuCollapsed() {
+                toggleCover(false);
+            }
+        });
         mMenu.findViewById(R.id.id_main_menu_item_1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mMenu.collapse();
                 ConnectionManager.getInstance().setupConnection(MainActivity.this);
             }
         });
@@ -138,12 +170,14 @@ public class MainActivity extends AppCompatActivity {
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(mMenu, "menu 2 clicked", Snackbar.LENGTH_LONG).show();
+                mMenu.collapse();
+                startActivity(new Intent(MainActivity.this, RecordActivity.class));
             }
         });
         mMenu.findViewById(R.id.id_main_menu_item_3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mMenu.collapse();
                 Snackbar.make(mMenu, "menu 3 clicked", Snackbar.LENGTH_LONG).show();
             }
         });
@@ -168,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 datas.add(data);
             } else {
                 data = new NormalItemData();
+                data.setmType(t);
                 switch (t) {
                     case UNKNOW:
                         continue;
@@ -177,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                         data.setmLastRecordUnit(R.string.blood_oxygen_unit);
                         data.setmIconRes(R.drawable.ic_oxygen_symbol);
                         break;
-                    case BLOOD_PRESURE:
+                    case BLOOD_PRESSURE:
                         data.setmItemNameTextRes(R.string.blood_pressure);
                         data.setmIconRes(R.drawable.ic_sphygmomanometer);
                         break;
@@ -193,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                         data.setmItemNameTextRes(R.string.ecg);
                         data.setmIconRes(R.drawable.ic_ecg);
                         break;
-                    case HEART_REAT:
+                    case HEART_RATE:
                         data.setmItemNameTextRes(R.string.heart_rate);
                         data.setmIconRes(R.drawable.ic_cardiogram);
                         data.setmRecord(false);

@@ -22,11 +22,6 @@ public class NormalItemData implements Serializable {
     public static String LAYOUT_RES = "layout_res";
     public static String RECORD_INFO = "record_info";
     public static String LAST_RECORD_TIME = "last_record_time";
-
-    public enum Type {
-        UNKNOW, BLOOD_PRESURE, BLOOD_TEMPUTURE, HEART_REAT, BLOOD_OX, ECG
-    }
-
     public Type mType = Type.UNKNOW;
     protected boolean mRecord;
     @LayoutRes
@@ -44,10 +39,8 @@ public class NormalItemData implements Serializable {
     protected String mRecordInfo = "89/123";
     protected String mLastRecordTime = "3 天前";
 
-
     public NormalItemData() {
     }
-
 
     public int getmIconRes() {
         return mIconRes;
@@ -127,5 +120,48 @@ public class NormalItemData implements Serializable {
 
     public void setmType(Type mType) {
         this.mType = mType;
+    }
+
+    public enum Type {
+        UNKNOW(0), BLOOD_PRESSURE(1), BLOOD_TEMPUTURE(2), HEART_RATE(3), BLOOD_OX(4), ECG(5);
+        private int value = 0;
+
+        Type(int value) {
+            this.value = value;
+        }
+
+        public static Type getTypeFromValue(int value) {
+            for (Type t : Type.values()) {
+                if (t.value == value) {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+        public static String getShowStringByType(Type type) {
+            switch (type) {
+                case BLOOD_OX:
+                    return "测量血氧";
+                case BLOOD_PRESSURE:
+                    return "测量血压";
+                case BLOOD_TEMPUTURE:
+                    return "测量体温";
+                case HEART_RATE:
+                    return "测量心率";
+                case ECG:
+                    return "测量心电";
+                default:
+                    return "未知模块";
+            }
+        }
+
+        public static String getShowStringByValue(int value) {
+            return getShowStringByType(getTypeFromValue(value));
+        }
+
+        public int getValue() {
+            return value;
+        }
     }
 }

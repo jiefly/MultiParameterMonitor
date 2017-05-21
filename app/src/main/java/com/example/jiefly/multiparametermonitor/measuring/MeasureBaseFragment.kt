@@ -2,8 +2,13 @@ package com.example.jiefly.multiparametermonitor.measuring
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import com.example.jiefly.multiparametermonitor.R
 import com.example.jiefly.multiparametermonitor.connection.Connection
 import com.example.jiefly.multiparametermonitor.connection.ConnectionActivity
 import com.example.jiefly.multiparametermonitor.connection.ConnectionManager
@@ -14,7 +19,6 @@ import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener
  */
 abstract class MeasureBaseFragment : OnConnectionListener<Any>, Fragment() {
     var connection: Connection? = null
-
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         connection = ConnectionManager.getInstance().connection
@@ -24,6 +28,10 @@ abstract class MeasureBaseFragment : OnConnectionListener<Any>, Fragment() {
             connection!!.registerCallback(this)
         }
 
+    }
+
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater!!.inflate(R.layout.fragment_measure_incompleted, container, false)
     }
 
     override fun onDestroy() {

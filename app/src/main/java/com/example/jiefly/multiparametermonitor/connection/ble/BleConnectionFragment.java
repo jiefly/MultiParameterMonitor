@@ -134,6 +134,11 @@ public class BleConnectionFragment extends Fragment implements View.OnClickListe
     }
 
     private void scan() {
+        if (!mBluetoothLe.isBluetoothOpen()) {
+            //没有打开蓝牙，请求打开手机蓝牙
+            mBluetoothLe.enableBluetooth(getActivity(), 666);
+            return;
+        }
         getActivity().startService(new Intent(getActivity(), BleConnectionService.class));
         getActivity().bindService(new Intent(getActivity(), BleConnectionService.class), mServiceConnection, Context.BIND_AUTO_CREATE);
         //对于Android 6.0以上的版本，申请地理位置动态权限

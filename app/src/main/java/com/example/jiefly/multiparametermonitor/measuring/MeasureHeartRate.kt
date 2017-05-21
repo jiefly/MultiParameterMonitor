@@ -1,9 +1,9 @@
 package com.example.jiefly.multiparametermonitor.measuring
 
 /**
- * Created by chgao on 17-5-20.
+ * Created by chgao on 17-5-21.
  */
-class MeasureTemperature : MeasureBaseFragment() {
+class MeasureHeartRate : MeasureBaseFragment() {
     override fun onHandleData(s: String) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

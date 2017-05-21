@@ -26,22 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ECGTestActivity"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".connection.ConnectionActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".connection.ConnectionActivity" />
+        <activity android:name=".measuring.MeasureMain" />
+        <activity android:name=".main.RecordActivity" />
 
         <service
             android:name=".connection.ble.BleConnectionService"
@@ -52,8 +39,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".measuring.MeasureMain" />
-        <activity android:name=".util.Main2Activity"></activity>
     </application>
 
 </manifest>

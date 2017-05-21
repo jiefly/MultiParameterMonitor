@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.example.jiefly.multiparametermonitor.R;
 import com.example.jiefly.multiparametermonitor.connection.ble.BleConnectionFragment;
 import com.example.jiefly.multiparametermonitor.connection.wifi.WifiOnConnectionListenerFragment;
-import com.example.jiefly.multiparametermonitor.measuring.MeasureEcg;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -25,16 +24,8 @@ public class ConnectionActivity extends AppCompatActivity implements ChooseConne
         setContentView(R.layout.activity_connection);
         initToolBar();
         showChoose();
-//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-//        showMeasureEcg();
     }
 
-    private void showMeasureEcg() {
-        FragmentManager manager = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.id_container, new MeasureEcg(), "MeasureEcg");
-        transaction.commit();
-    }
 
     private void showChoose() {
         FragmentManager manager = getSupportFragmentManager();
