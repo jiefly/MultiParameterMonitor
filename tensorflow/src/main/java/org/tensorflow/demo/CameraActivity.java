@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.jiefly.multiparametermonitor.tensorflow;
+package org.tensorflow.demo;
 
 import android.Manifest;
 import android.app.Activity;
@@ -31,9 +31,7 @@ import android.view.KeyEvent;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-
-import com.example.jiefly.multiparametermonitor.R;
-import com.example.jiefly.multiparametermonitor.tensorflow.env.Logger;
+import org.tensorflow.demo.env.Logger;
 
 import java.nio.ByteBuffer;
 
@@ -57,7 +55,6 @@ public abstract class CameraActivity extends Activity implements OnImageAvailabl
     getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     setContentView(R.layout.activity_camera);
-
     if (hasPermission()) {
       setFragment();
     } else {

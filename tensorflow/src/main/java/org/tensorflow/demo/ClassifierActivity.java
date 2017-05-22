@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.jiefly.multiparametermonitor.tensorflow;
+package org.tensorflow.demo;
 
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -32,10 +32,9 @@ import android.util.Size;
 import android.util.TypedValue;
 import android.view.Display;
 
-import com.example.jiefly.multiparametermonitor.R;
-import com.example.jiefly.multiparametermonitor.tensorflow.env.BorderedText;
-import com.example.jiefly.multiparametermonitor.tensorflow.env.ImageUtils;
-import com.example.jiefly.multiparametermonitor.tensorflow.env.Logger;
+import org.tensorflow.demo.env.BorderedText;
+import org.tensorflow.demo.env.ImageUtils;
+import org.tensorflow.demo.env.Logger;
 
 import java.util.List;
 import java.util.Vector;

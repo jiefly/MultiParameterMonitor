@@ -1,13 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          
-    package="org.tensorflow.demo"
-    >
 
-    <application android:allowBackup="true"
+    package="org.tensorflow.demo">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <application
+        android:allowBackup="true"
         android:label="@string/app_name"
-        android:supportsRtl="true"
->
-
+        android:supportsRtl="true">
+        <activity android:name=".ClassifierActivity" />
     </application>
 
 </manifest>

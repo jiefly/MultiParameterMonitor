@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.jiefly.multiparametermonitor.tensorflow;
+package org.tensorflow.demo;
 
 import android.Manifest;
 import android.app.Activity;
@@ -55,8 +55,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.jiefly.multiparametermonitor.R;
-import com.example.jiefly.multiparametermonitor.tensorflow.env.Logger;
+import org.tensorflow.demo.env.Logger;
 
 import java.util.ArrayList;
 import java.util.Arrays;

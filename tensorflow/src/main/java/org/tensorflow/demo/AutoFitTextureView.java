@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.jiefly.multiparametermonitor.tensorflow;
+package org.tensorflow.demo;
 
 import android.content.Context;
 import android.util.AttributeSet;

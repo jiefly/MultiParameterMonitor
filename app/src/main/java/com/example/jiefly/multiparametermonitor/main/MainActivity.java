@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,6 +24,8 @@ import com.example.jiefly.multiparametermonitor.measuring.MeasureMain;
 import com.example.jiefly.multiparametermonitor.util.ObjectHelper;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
+import org.tensorflow.demo.ClassifierActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mMenu.collapse();
-                Snackbar.make(mMenu, "menu 3 clicked", Snackbar.LENGTH_LONG).show();
+                startActivity(new Intent(MainActivity.this, ClassifierActivity.class));
             }
         });
     }

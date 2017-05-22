@@ -18,13 +18,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
+    compile fileTree(include: ['*.jar', '*.so'], dir: 'libs')
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.qindachang:BluetoothLELibrary:0.7.4'
@@ -38,7 +36,7 @@ dependencies {
     compile 'com.getbase:floatingactionbutton:1.10.1'
     compile 'pub.devrel:easypermissions:0.4.0'
     compile 'com.github.mychoices:Jgraph:master-SNAPSHOT'
-    testCompile 'junit:junit:4.12'
+    compile project(':tensorflow')
 }
 repositories {
     mavenCentral()
