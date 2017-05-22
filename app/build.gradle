@@ -37,6 +37,7 @@ dependencies {
     compile 'pub.devrel:easypermissions:0.4.0'
     compile 'com.github.mychoices:Jgraph:master-SNAPSHOT'
     compile project(':tensorflow')
+    compile files('libs/ThinkGear.jar')
 }
 repositories {
     mavenCentral()
