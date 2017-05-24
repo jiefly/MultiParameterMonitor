@@ -13,6 +13,7 @@ import com.example.jiefly.multiparametermonitor.connection.Connection
 import com.example.jiefly.multiparametermonitor.connection.ConnectionActivity
 import com.example.jiefly.multiparametermonitor.connection.ConnectionManager
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener
+import com.example.jiefly.multiparametermonitor.main.BaseActivity
 import com.example.jiefly.multiparametermonitor.measuring.data.EcgData
 
 /**
@@ -22,6 +23,9 @@ abstract class MeasureBaseFragment : OnConnectionListener<Any>, Fragment() {
     var connection: Connection? = null
     override fun onAttach(context: Context?) {
         super.onAttach(context)
+        if (debug()) {
+            return
+        }
         connection = ConnectionManager.getInstance().connection
         if (connection == null) {
             activity.startActivity(Intent(activity, ConnectionActivity::class.java))
@@ -31,6 +35,11 @@ abstract class MeasureBaseFragment : OnConnectionListener<Any>, Fragment() {
 
     }
 
+    open fun mock() {
+        if (!debug())
+            return
+
+    }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_measure_incompleted, container, false)
     }
@@ -82,4 +91,9 @@ abstract class MeasureBaseFragment : OnConnectionListener<Any>, Fragment() {
     fun MeasureBaseFragment.toast(message: CharSequence?, duration: Int = Toast.LENGTH_SHORT) {
         Toast.makeText(activity, message, duration).show()
     }
+
+    open fun debug(): Boolean {
+        return (activity as BaseActivity).debug()
+    }
+
 }

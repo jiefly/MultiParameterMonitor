@@ -2,18 +2,19 @@ package com.example.jiefly.multiparametermonitor.measuring;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.jiefly.multiparametermonitor.R;
+import com.example.jiefly.multiparametermonitor.main.BaseActivity;
 import com.example.jiefly.multiparametermonitor.main.list.data.NormalItemData;
 
-public class MeasureMain extends AppCompatActivity {
+public class MeasureMain extends BaseActivity {
     public final static String MEASURE_TYPE = "measure_type";
     private static final String TAG = MeasureMain.class.getSimpleName();
     private TextView mTitle;
+    private boolean DEBUG;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,7 @@ public class MeasureMain extends AppCompatActivity {
                 onBackPressed();
             }
         });
+        DEBUG = getIntent().getBooleanExtra(DEBUG_MARK, false);
         startMeasureFragment(NormalItemData.Type.getTypeFromValue(getIntent().getIntExtra(MEASURE_TYPE, NormalItemData.Type.UNKNOW.getValue())));
     }
 
@@ -55,5 +57,10 @@ public class MeasureMain extends AppCompatActivity {
                 return;
         }
         transaction.commit();
+    }
+
+    @Override
+    public boolean debug() {
+        return DEBUG;
     }
 }

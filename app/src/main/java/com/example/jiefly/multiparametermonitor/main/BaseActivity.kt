@@ -6,7 +6,10 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 
 open class BaseActivity : AppCompatActivity() {
-
+    companion object {
+        @JvmField
+        val DEBUG_MARK = "debug_mark"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -18,5 +21,9 @@ open class BaseActivity : AppCompatActivity() {
         builder.setNegativeButton(positive, positiveListener)
         builder.setPositiveButton(negative, negativeListener)
         builder.show()
+    }
+
+    open fun debug(): Boolean {
+        return false
     }
 }

@@ -8,9 +8,7 @@ import com.example.jiefly.multiparametermonitor.connection.Connection;
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
 import com.example.jiefly.multiparametermonitor.measuring.EcgView;
 import com.example.jiefly.multiparametermonitor.measuring.data.EcgData;
-import com.example.jiefly.multiparametermonitor.sensor.BMD101;
-import com.jonas.jgraph.graph.JcoolGraph;
-import com.jonas.jgraph.models.Jchart;
+import com.example.jiefly.multiparametermonitor.measuring.parser.BMD101;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,8 +34,6 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
     private Connection mConnection;
     private int flag = 0;
 
-    private JcoolGraph jcoolGraph;
-    private List<Jchart> jcharts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

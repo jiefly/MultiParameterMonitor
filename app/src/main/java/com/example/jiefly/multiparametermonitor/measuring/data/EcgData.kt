@@ -1,21 +1,16 @@
 package com.example.jiefly.multiparametermonitor.measuring.data
 
+import java.util.*
+import java.util.concurrent.LinkedBlockingQueue
+
 /**
  * Created by chgao on 17-5-22.
  */
-class EcgData {
-    var realValue: Float
-    var realTimeHT: Int
-    var averageHT: Int
-    var rrInterval: Int
+open class EcgData : BaseMeasureData() {
+    var realValue: Float = 0f
+    var realTimeHT: Int = 0
+    var averageHT: Int = 0
+    var rrInterval: Int = 0
+    var rawEcgValues: Queue<Int> = LinkedBlockingQueue()
     var containsHT = false
-
-    init {
-        realTimeHT = 0
-        averageHT = 0
-        rrInterval = 0
-        realValue = 0f
-    }
-
-    constructor()
 }

@@ -6,7 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.jiefly.multiparametermonitor.R
 import com.example.jiefly.multiparametermonitor.measuring.data.EcgData
-import com.example.jiefly.multiparametermonitor.sensor.BMD101
+import com.example.jiefly.multiparametermonitor.measuring.parser.BMD101
+import com.example.jiefly.multiparametermonitor.measuring.parser.ParserHelper
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -23,8 +24,22 @@ class MeasureEcg : MeasureBaseFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+        mock()
         return inflater!!.inflate(R.layout.fragment_measure_ecg, container, false)
+    }
+
+    private fun simulator() {
+        val data0Q = ParserHelper().parserEcg(kotlin.ByteArray(0x11), true).rawEcgValues
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                if (EcgView.isRunning) {
+                    if (!data0Q.isEmpty()) {
+                        EcgView.addEcgData0(data0Q.peek())
+                        data0Q.add(data0Q.poll())
+                    }
+                }
+            }
+        }, 0, 2)
     }
 
     override fun onHandleData(s: String) {
@@ -64,5 +79,9 @@ class MeasureEcg : MeasureBaseFragment() {
                 }
             }
         }, 0, DATA_GET_FREQUENCY)
+    }
+
+    override fun mock() {
+        simulator()
     }
 }

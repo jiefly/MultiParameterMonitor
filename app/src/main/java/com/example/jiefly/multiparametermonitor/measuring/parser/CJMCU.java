@@ -1,4 +1,4 @@
-package com.example.jiefly.multiparametermonitor.sensor;
+package com.example.jiefly.multiparametermonitor.measuring.parser;
 
 import android.util.Log;
 

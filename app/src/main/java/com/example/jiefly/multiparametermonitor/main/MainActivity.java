@@ -67,7 +67,7 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onNext(NormalItemData data) {
-                if (ConnectionManager.getInstance().isConnected()) {
+                if (ConnectionManager.getInstance().isConnected() || debug()) {
                     jumpToMeasure(data.getmType());
                 } else {
                     showConnectDeviceDialog(data);
@@ -77,9 +77,15 @@ public class MainActivity extends BaseActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
+    @Override
+    public boolean debug() {
+        return true;
+    }
+
     private void jumpToMeasure(NormalItemData.Type type) {
         Intent intent = new Intent(this, MeasureMain.class);
         intent.putExtra(MeasureMain.MEASURE_TYPE, type.getValue());
+        intent.putExtra(DEBUG_MARK, debug());
         startActivity(intent);
     }
 

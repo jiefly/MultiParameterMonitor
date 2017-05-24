@@ -1,7 +1,8 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#66cdcdcd"
     android:padding="16dp">
 
     <android.support.v7.widget.CardView
@@ -10,69 +11,80 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <com.jonas.jgraph.graph.JcoolGraph
+            <com.github.mikephil.charting.charts.LineChart
                 android:id="@+id/id_measure_boold_pressure_chart"
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:padding="4dp" />
+                android:layout_height="300dp"
+                android:layout_margin="16dp" />
+
+            <View
+                android:layout_below="@+id/id_measure_boold_pressure_chart"
+                android:layout_width="match_parent"
+                android:background="#44cdcdcd"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_height="1dp" />
 
             <TextView
-                android:padding="10dp"
                 android:id="@+id/id_boold_pressure_lower"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/id_measure_boold_pressure_chart"
+                android:layout_alignTop="@+id/id_start_card"
                 android:text="SYS" />
 
             <TextView
-                android:padding="10dp"
                 android:id="@+id/id_boold_pressure_upper"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_above="@+id/id_boold_pressure_pluse"
+                android:layout_alignStart="@+id/id_boold_pressure_lower"
+                android:layout_marginBottom="11dp"
                 android:text="DIA" />
 
             <TextView
-                android:padding="10dp"
                 android:id="@+id/id_boold_pressure_pluse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/id_start_card"
+                android:layout_alignStart="@+id/id_boold_pressure_upper"
                 android:text="PLUSE" />
-        </LinearLayout>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/id_start_card"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@+id/id_measure_boold_pressure_chart"
+                android:layout_margin="16dp"
+                android:background="@color/cardview_dark_background"
+                android:clickable="true"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:gravity="center"
+                app:cardCornerRadius="40dp">
+
+                <ProgressBar
+                    android:id="@+id/id_start_progress_bar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:visibility="gone"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:id="@+id/id_start_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="开始"
+                    android:textSize="20sp" />
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+
 
     </android.support.v7.widget.CardView>
 
-    <android.support.v7.widget.CardView
-        android:layout_width="80dp"
-        android:id="@+id/id_start_card"
-        android:layout_height="80dp"
-        android:padding="16dp"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/id_chart_container"
-        android:layout_marginTop="40dp"
-        android:background="@color/cardview_dark_background"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:gravity="center"
-        app:cardCornerRadius="40dp">
-
-        <ProgressBar
-            android:layout_gravity="center"
-            android:id="@+id/id_start_progress_bar"
-            android:layout_width="80dp"
-            android:layout_height="80dp" />
-        <TextView
-            android:id="@+id/id_start_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="测量"
-            android:layout_gravity="center"
-            android:textSize="20sp" />
-    </android.support.v7.widget.CardView>
-
-
-</RelativeLayout>
+</FrameLayout>

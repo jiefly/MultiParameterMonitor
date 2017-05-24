@@ -2,6 +2,7 @@ package com.example.jiefly.multiparametermonitor.application;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 
 import com.qindachang.bluetoothle.BluetoothConfig;
 import com.qindachang.bluetoothle.BluetoothLe;
@@ -36,6 +37,10 @@ public class AppContext extends Application {
             mSharedPreferences = super.getSharedPreferences(TAG, MODE_PRIVATE);
         }
         return mSharedPreferences;
+    }
+
+    public static Resources getResource() {
+        return instance.getResources();
     }
 
     public static int dp2px(float dpvalue) {
