@@ -55,18 +55,14 @@ public class ConnectionManager {
         if (connection != null) {
             mConnection = connection;
             mConnection.registerCallback(new OnConnectionListener() {
-                @Override
-                public void sendData(String s) {
-
-                }
-
-                @Override
-                public void sendData(char[] data) {
-
-                }
 
                 @Override
                 public void onDataReceived(String s) {
+
+                }
+
+                @Override
+                public void onDataReceived(byte[] data) {
 
                 }
 
@@ -110,6 +106,13 @@ public class ConnectionManager {
             mConnection = null;
         } else {
             Log.w(TAG, "The mConnection which you want destroy is't the mConnection in ConnectionManager");
+        }
+    }
+
+    public void disconnectDevice() {
+        if (mConnection != null) {
+            mConnection.disConnect();
+            destroyConnection(mConnection);
         }
     }
 

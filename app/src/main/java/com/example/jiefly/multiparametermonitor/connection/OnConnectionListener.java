@@ -5,11 +5,10 @@ package com.example.jiefly.multiparametermonitor.connection;
  */
 
 public interface OnConnectionListener<D> {
-    void sendData(String s);
-
-    void sendData(char[] data);
 
     void onDataReceived(String s);
+
+    void onDataReceived(byte[] data);
 
     void onDeviceConnecting();
 

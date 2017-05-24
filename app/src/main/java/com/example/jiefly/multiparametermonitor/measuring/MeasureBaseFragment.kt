@@ -13,6 +13,7 @@ import com.example.jiefly.multiparametermonitor.connection.Connection
 import com.example.jiefly.multiparametermonitor.connection.ConnectionActivity
 import com.example.jiefly.multiparametermonitor.connection.ConnectionManager
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener
+import com.example.jiefly.multiparametermonitor.measuring.data.EcgData
 
 /**
  * Created by chgao on 17-5-20.
@@ -41,19 +42,26 @@ abstract class MeasureBaseFragment : OnConnectionListener<Any>, Fragment() {
         }
     }
 
-    override fun sendData(s: String?) {}
-
-    override fun sendData(data: CharArray?) {}
-
     override fun onDataReceived(s: String?) {
         if (s != null) {
             onHandleData(onPerHandleData(s)!!)
         }
     }
 
+    override fun onDataReceived(data: ByteArray?) {
+        data?.let { onHandleData(data) }
+    }
+
+
     protected abstract fun onHandleData(s: String): Unit
 
     protected abstract fun onPerHandleData(s: String): String?
+
+    protected open fun onHandleData(data: ByteArray?): Unit {}
+
+    protected open fun onPerHandleData(data: ByteArray): List<EcgData> {
+        return ArrayList()
+    }
 
     override fun onDeviceConnecting() {
         toast("设备正在连接")

@@ -48,7 +48,7 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
         setContentView(R.layout.activity_ecgtest);
         loadDatafromBin();
         simulator();
-//        mConnection= ConnectionManager.getInstance().getConnection();
+//        mConnection= ConnectionManager.getInstance().getConnectionListener();
 //        if (mConnection != null){
 //            mConnection.registerCallback(this);
 //        }
@@ -130,16 +130,6 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
     }
 
     @Override
-    public void sendData(String s) {
-
-    }
-
-    @Override
-    public void sendData(char[] data) {
-
-    }
-
-    @Override
     public void onDataReceived(String s) {
         if (s == null || s.length() == 0) {
             return;
@@ -164,6 +154,11 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
             data0Q.add(Integer.parseInt(new String(datas, from, datas.length - from)));
         }
         lock.unlock();
+    }
+
+    @Override
+    public void onDataReceived(byte[] data) {
+
     }
 
     @Override

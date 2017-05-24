@@ -18,6 +18,10 @@ import kotlin.collections.ArrayList
  * Created by chgao on 17-5-20.
  */
 class MeasureBloodPresure : MeasureBaseFragment() {
+    override fun onDataReceived(data: ByteArray?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     var jGraph: JcoolGraph? = null
     val chartDatas = ArrayList<Jchart>()
     var measuring = false

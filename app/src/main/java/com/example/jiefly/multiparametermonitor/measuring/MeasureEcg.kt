@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.jiefly.multiparametermonitor.R
+import com.example.jiefly.multiparametermonitor.measuring.data.EcgData
+import com.example.jiefly.multiparametermonitor.sensor.BMD101
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 
@@ -29,8 +31,20 @@ class MeasureEcg : MeasureBaseFragment() {
         s.split(",").filter { it.isNotEmpty() }.forEach { dataPool.offer(it.toInt()) }
     }
 
+    override fun onHandleData(data: ByteArray?) {
+        super.onHandleData(data)
+        data?.let { onPerHandleData(data) }
+                ?.filter { it.realValue > -4096 && it.realValue < 4096 }
+                ?.forEach { dataPool.offer(it.realValue.toInt()) }
+    }
+
     override fun onPerHandleData(s: String): String? {
         return s.filter { it in '0'..'9' || it == ',' }
+    }
+
+    override fun onPerHandleData(data: ByteArray): List<EcgData> {
+        super.onPerHandleData(data)
+        return BMD101().parserEcgData(data)
     }
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {

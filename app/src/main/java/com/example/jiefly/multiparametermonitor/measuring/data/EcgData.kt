@@ -8,6 +8,7 @@ class EcgData {
     var realTimeHT: Int
     var averageHT: Int
     var rrInterval: Int
+    var containsHT = false
 
     init {
         realTimeHT = 0
