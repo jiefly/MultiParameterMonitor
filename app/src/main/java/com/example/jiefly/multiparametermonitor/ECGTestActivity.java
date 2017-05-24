@@ -1,14 +1,18 @@
 package com.example.jiefly.multiparametermonitor;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.example.jiefly.multiparametermonitor.connection.Connection;
-import com.example.jiefly.multiparametermonitor.connection.ConnectionManager;
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
 import com.example.jiefly.multiparametermonitor.measuring.EcgView;
+import com.example.jiefly.multiparametermonitor.measuring.data.EcgData;
+import com.example.jiefly.multiparametermonitor.sensor.BMD101;
+import com.jonas.jgraph.graph.JcoolGraph;
+import com.jonas.jgraph.models.Jchart;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -31,6 +35,10 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
     private Condition read;
     private Connection mConnection;
     private int flag = 0;
+
+    private JcoolGraph jcoolGraph;
+    private List<Jchart> jcharts = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,58 +46,86 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
         write = lock.newCondition();
         read = lock.newCondition();
         setContentView(R.layout.activity_ecgtest);
-//        loadDatas();
+        loadDatafromBin();
         simulator();
-        mConnection= ConnectionManager.getInstance().getConnection();
-        if (mConnection != null){
-            mConnection.registerCallback(this);
-        }
+//        mConnection= ConnectionManager.getInstance().getConnection();
+//        if (mConnection != null){
+//            mConnection.registerCallback(this);
+//        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mConnection!=null) {
-            mConnection.registerCallback(this);
-        }
+//        if (mConnection!=null) {
+//            mConnection.registerCallback(this);
+//        }
     }
 
     /**
      * 模拟心电发送，心电数据是一秒500个包，所以
      */
-    private void simulator(){
+    private void simulator() {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if(EcgView.isRunning){
+                if (EcgView.isRunning) {
 //                    Log.i("ECG_TEST_ACTIVITY","data0Q size:"+data0Q.size());
                     lock.lock();
-                    while (!data0Q.isEmpty()){
+                    if (!data0Q.isEmpty()) {
                         EcgView.addEcgData0(data0Q.poll());
+                        EcgView.addEcgData1(data1Q.poll());
                     }
                     lock.unlock();
                 }
             }
-        }, 0, 16);
+        }, 0, 2);
     }
 
-    private void loadDatas(){
-        try{
+    private void loadDatafromBin() {
+        try {
+            InputStream in = getResources().openRawResource(R.raw.ecg_bin);
+            int len = in.available();
+            List<Integer> datas = new ArrayList<>();
+            for (int i = 0; i < len; i++) {
+                datas.add(in.read());
+            }
+            List<EcgData> data = new BMD101().parserEcgData(datas);
+            ArrayList<Double> filters = new ArrayList<>();
+            for (EcgData ecgData : data) {
+                filters.add((double) ecgData.getRealValue() + 10000);
+            }
+            filters = new KalmanFilter(filters).calc();
+            for (EcgData ecgData : data) {
+                data1Q.add((int) ecgData.getRealValue() + 10000);
+            }
+            for (double x : filters) {
+                data0Q.add((int) x);
+                Log.i("parsered", "实时数据" + x);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadDatas() {
+        try {
             String data0 = "";
-            InputStream in = getResources().openRawResource(R.raw.ecgdata);
+            InputStream in = getResources().openRawResource(R.raw.ok_ecg_01);
             int length = in.available();
-            byte [] buffer = new byte[length];
+            byte[] buffer = new byte[length];
             in.read(buffer);
             data0 = new String(buffer);
             in.close();
             String[] data0s = data0.split(",");
-            for(String str : data0s){
+            for (String str : data0s) {
                 datas.add(Integer.parseInt(str));
             }
 
             data0Q.addAll(datas);
             data1Q.addAll(datas);
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
 
     }
 
@@ -105,27 +141,27 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
 
     @Override
     public void onDataReceived(String s) {
-        if (s == null||s.length() == 0){
+        if (s == null || s.length() == 0) {
             return;
         }
-        Log.i("data received in ECG",s);
+        Log.i("data received in ECG", s);
         char[] datas = s.toCharArray();
-        int from=0;
-        for (int i=0;i<datas.length;i++){
-            if (datas[i] <= '9' && datas[i]>= '0'){
+        int from = 0;
+        for (int i = 0; i < datas.length; i++) {
+            if (datas[i] <= '9' && datas[i] >= '0') {
                 from = i;
                 break;
             }
         }
         lock.lock();
-        for (int i=from;i<datas.length;i++){
-            if (datas[i]>'9'||datas[i]<'0'&&i>from){
-                data0Q.add(Integer.parseInt(new String(datas,from,i-from)));
-                from = i+1;
+        for (int i = from; i < datas.length; i++) {
+            if (datas[i] > '9' || datas[i] < '0' && i > from) {
+                data0Q.add(Integer.parseInt(new String(datas, from, i - from)));
+                from = i + 1;
             }
         }
-        if (from < datas.length){
-            data0Q.add(Integer.parseInt(new String(datas,from,datas.length - from)));
+        if (from < datas.length) {
+            data0Q.add(Integer.parseInt(new String(datas, from, datas.length - from)));
         }
         lock.unlock();
     }

@@ -25,17 +25,28 @@ class BMD101 {
     //3 byte
     val MUL_CONFIG_BYTE = 0x85
 
+    fun parserEcgData(srcData: List<Int>): List<EcgData> {
+
+        return parserEcgData(Array(srcData.size, { i -> srcData[i] }))
+    }
+
+    fun parserEcgData(srcData: ByteArray): List<EcgData> {
+        val intArray = Array(srcData.size, { i -> srcData[i].toInt() })
+        return parserEcgData(intArray)
+    }
+
     fun parserEcgData(srcData: Array<Int>): List<EcgData> {
         var result = ArrayList<EcgData>()
         var units: List<Array<Int>> = splitUnit(srcData)
         var ecg: EcgData
         var unitLen = 0
-        for (unit in units) {
+        var checkSum = 0
+        loop@ for (unit in units) {
             if (unit.size < MIN_UNIT_LEN || unit.size > MAX_UNIT_LEN) {
                 e(TAG, "unit len is wrong,size:$unitLen did't range in [ $MIN_UNIT_LEN,$MAX_UNIT_LEN ]")
                 continue
             }
-            unitLen = unit[2] + 4
+            unitLen = unit[2] + 3
             if (unit.size != unitLen) {
                 e(TAG, "unit real length did't match length in data,real length is ${unit.size},want length is $unitLen")
                 continue
@@ -48,15 +59,18 @@ class BMD101 {
                 //单变量字节
                     POOR_SIGNAL -> {
                         i += 2
+//                        continue@loop
                     }
                 //单变量字节
                     CURRENT_HEART_RATE -> {
                         ecg.realTimeHT = unit[i + 1]
                         i += 2
+//                        continue@loop
                     }
                 //单变量字节
                     CONFIG_BYTE -> {
                         i += 2
+//                        continue@loop
                     }
                     MUL_HEART_RATE -> {
                         //平均心率数据长度为５
@@ -68,22 +82,37 @@ class BMD101 {
                             ecg.averageHT = sum / 5
                         }
                         i += 2 + unit[i + 1]
+//                        continue@loop
                     }
                     ECG_RAW -> {
                         //心电信号数据长度为２
+                        var value = 0
                         if (unit[i + 1] == 0x02) {
-                            ecg.realValue = (unit[i + 2] * 256 + unit[i + 3]).toFloat()
+                            value = unit[i + 2] * 256 + unit[i + 3]
+                            if (value >= 32768) {
+                                value -= 65536
+                            }
+
+                            ecg.realValue = value.toFloat()
                         }
+                        if (ecg.realValue > 4096)
+                            e(TAG, "${unit[i + 2]}:${unit[i + 3]}:value:$value")
+//                            continue@loop
                         i += 2 + unit[i + 1]
                     }
 
                     MUL_CONFIG_BYTE -> {
                         i += 2 + unit[i + 1]
+//                        continue@loop
                     }
                     EXCODE -> {
                         i++
+//                        continue@loop
                     }
-                    else -> i++
+                    else -> {
+                        i++
+//                        continue@loop
+                    }
                 }
             }
             result.add(ecg)
@@ -116,33 +145,41 @@ class BMD101 {
         return (from..to).firstOrNull { srcData[it] == SYNC && it < to && srcData[it + 1] == SYNC } ?: 0
     }
 
+
+}
+
+fun string2Hex(src: String): Array<Int> {
+    val result = ArrayList<Int>()
+    src.split(" ").forEach {
+        if (it.length == 4) {
+            for (i in 0..1) {
+                var value: Int = -1
+                for (c in it.substring(i * 2..i * 2 + 1)) {
+                    when (c) {
+                        in 'a'..'f' -> {
+                            if (value == -1) {
+                                value += (c - 'a' + 10) * 16 + 1
+                            } else {
+                                value += (c - 'a' + 10)
+                            }
+                        }
+                        in '0'..'9' -> {
+                            if (value == -1) {
+                                value += (c - '0') * 16 + 1
+                            } else {
+                                value += (c - '0')
+                            }
+                        }
+                    }
+                    result.add(value)
+                }
+            }
+        }
+    }
+    return Array(result.size, { i -> result[i] })
 }
 
 fun main(args: Array<String>) {
     val test = "aa aa 04 80 02 07 87 ef aa aa 04 80 02 05 28 50 aa aa 04 80 02 04 ea 8f aa aa 04 80 02 06 c3 b4 aa aa 04 80 02 07 5d 19"
-    val input: Array<Int> = Array(100, { i -> if (i == 1 || i == 0) 0xaa else 0xff })
-    val mockData = ArrayList<Int>()
-    test.split(" ").forEach {
-        var value: Int = -1
-        for (c in it.toCharArray()) {
-            when (c) {
-                in 'a'..'f' -> {
-                    if (value != -1) {
-                        value += (c - 'a' + 10) * 16 + 1
-                    } else {
-                        value += (c - 'a' + 10)
-                    }
-                }
-                in '0'..'9' -> {
-                    if (value != -1) {
-                        value += (c - '0') * 16 + 1
-                    } else {
-                        value += (c - '0')
-                    }
-                }
-            }
-        }
-        mockData.add(value)
-    }
-    BMD101().parserEcgData(Array(mockData.size, { i -> mockData[i] }))
+    BMD101().parserEcgData(string2Hex(test))
 }

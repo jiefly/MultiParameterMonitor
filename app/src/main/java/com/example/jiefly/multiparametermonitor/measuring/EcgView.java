@@ -34,9 +34,9 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
     private Context mContext;
     private SurfaceHolder surfaceHolder;
     private Canvas mCanvas;
-    private float ecgMax = 4096;//心电的最大值
-    private int wave_speed = 25;//波速: 25mm/s
-    private int sleepTime = 8; //每次锁屏的时间间距，单位:ms
+    private float ecgMax = 40960;//心电的最大值
+    private int wave_speed = 25;//波速: 25mm/
+    private int sleepTime = 16; //每次锁屏的时间间距，单位:ms
     private float lockWidth;//每次锁屏需要画的
     private int ecgPerCount = 8;//每次画心电数据的个数，心电每秒有500个数据包
     private Paint mBackgroundPaint;//画背景的画笔

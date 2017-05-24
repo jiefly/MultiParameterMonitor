@@ -31,6 +31,13 @@
         <activity android:name=".connection.ConnectionActivity" />
         <activity android:name=".measuring.MeasureMain" />
         <activity android:name=".main.RecordActivity" />
+        <activity android:name=".ECGTestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".connection.ble.BleConnectionService"
