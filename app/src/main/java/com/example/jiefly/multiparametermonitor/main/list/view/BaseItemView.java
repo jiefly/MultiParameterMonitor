@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,11 +32,12 @@ public abstract class BaseItemView extends LinearLayout {
     @LayoutRes
     protected int mLayoutResId = INVAILD_ID;
 
-    protected Button mConfirmBtn;
+    protected TextView mConfirmBtn;
     protected TextView mItemNameTv;
     protected CardView mCard;
     protected ImageView mIcon;
     protected NormalItemData mData;
+    protected Context mContext;
 
     public BaseItemView(Context context) {
         super(context);
@@ -57,6 +57,7 @@ public abstract class BaseItemView extends LinearLayout {
     protected abstract int getLayoutRes();
 
     private void init(Context context) {
+        mContext = context;
         mLayoutResId = getLayoutRes();
         if (mLayoutResId == INVAILD_ID) {
             mLayoutResId = R.layout.normal_item;
@@ -67,7 +68,7 @@ public abstract class BaseItemView extends LinearLayout {
     }
 
     protected void initView() {
-        mConfirmBtn = (Button) findViewById(R.id.id_item_btn);
+        mConfirmBtn = (TextView) findViewById(R.id.id_item_btn);
         mItemNameTv = (TextView) findViewById(R.id.id_item_name_tv);
         mCard = (CardView) findViewById(R.id.id_item_card);
         mIcon = (ImageView) findViewById(R.id.id_item_icon);

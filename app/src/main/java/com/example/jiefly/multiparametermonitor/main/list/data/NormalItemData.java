@@ -114,6 +114,10 @@ public class NormalItemData implements Serializable {
         this.mLastRecordTime = mLastRecordTime;
     }
 
+    public boolean isValueShowHorizontal() {
+        return mType == Type.BLOOD_TEMPUTURE || mType == Type.HEART_RATE;
+    }
+
     public Type getmType() {
         return mType;
     }

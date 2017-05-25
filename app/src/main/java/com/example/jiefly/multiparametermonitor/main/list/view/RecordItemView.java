@@ -4,7 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.widget.LinearLayout;
+import android.view.LayoutInflater;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,7 +19,7 @@ import static android.widget.RelativeLayout.CENTER_HORIZONTAL;
  */
 
 public class RecordItemView extends BaseItemView {
-    private LinearLayout mDescriptionLl;
+    private FrameLayout mDescriptionFL;
     private TextView mDescriptionOneTv;
     private TextView mDescriptionTwoTv;
     private TextView mLastRecordTimeTv;
@@ -43,9 +44,7 @@ public class RecordItemView extends BaseItemView {
     @Override
     protected void initView() {
         super.initView();
-        mDescriptionLl = (LinearLayout) findViewById(R.id.id_item_description);
-        mDescriptionOneTv = (TextView) findViewById(R.id.id_item_des_1);
-        mDescriptionTwoTv = (TextView) findViewById(R.id.id_item_des_2);
+        mDescriptionFL = (FrameLayout) findViewById(R.id.id_item_description);
         mLastRecordTimeTv = (TextView) findViewById(R.id.id_last_record_time);
     }
 
@@ -55,22 +54,34 @@ public class RecordItemView extends BaseItemView {
         //should show record info
         RelativeLayout.LayoutParams layoutParams;
         if (data.ismRecord()) {
-            layoutParams = new RelativeLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.small_image_size),getResources().getDimensionPixelSize(R.dimen.small_image_size));
+            handleDifferentTypeData(data);
+            layoutParams = new RelativeLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.small_image_size), getResources().getDimensionPixelSize(R.dimen.small_image_size));
             layoutParams.setMargins(0, getResources().getDimensionPixelSize(R.dimen.small_icon_margin_top), 0, 0);
             layoutParams.addRule(CENTER_HORIZONTAL);
-            mDescriptionLl.setVisibility(VISIBLE);
+            mDescriptionFL.setVisibility(VISIBLE);
             mLastRecordTimeTv.setVisibility(VISIBLE);
             mDescriptionTwoTv.setText(getResources().getString(data.getmLastRecordUnit()));
             mDescriptionOneTv.setText(data.getmRecordInfo());
             mLastRecordTimeTv.setText(data.getmLastRecordTime());
-        }else {
+        } else {
             //hide record info
-            layoutParams = new RelativeLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.big_image_size),getResources().getDimensionPixelSize(R.dimen.big_image_size));
+            layoutParams = new RelativeLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.big_image_size), getResources().getDimensionPixelSize(R.dimen.big_image_size));
             layoutParams.setMargins(0, getResources().getDimensionPixelSize(R.dimen.big_icon_margin_top), 0, 0);
             layoutParams.addRule(CENTER_HORIZONTAL);
-            mDescriptionLl.setVisibility(GONE);
+            mDescriptionFL.setVisibility(GONE);
             mLastRecordTimeTv.setVisibility(GONE);
         }
         mIcon.setLayoutParams(layoutParams);
+    }
+
+    private void handleDifferentTypeData(NormalItemData data) {
+        mDescriptionFL.removeAllViews();
+        if (data.isValueShowHorizontal()) {
+            mDescriptionFL.addView(LayoutInflater.from(mContext).inflate(R.layout.main_item_h_record_value_view, mDescriptionFL, false));
+        } else {
+            mDescriptionFL.addView(LayoutInflater.from(mContext).inflate(R.layout.main_item_vertical_record_value_view, mDescriptionFL, false));
+        }
+        mDescriptionOneTv = (TextView) findViewById(R.id.id_item_des_1);
+        mDescriptionTwoTv = (TextView) findViewById(R.id.id_item_des_2);
     }
 }

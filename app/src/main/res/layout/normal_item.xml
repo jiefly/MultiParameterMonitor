@@ -18,52 +18,30 @@
             android:layout_marginTop="@dimen/big_icon_margin_top"
             android:src="@drawable/ic_heart" />
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/id_item_description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
             android:layout_below="@+id/id_item_icon"
-            android:gravity="center"
             android:padding="10dp"
-            android:orientation="vertical"
-            android:visibility="visible">
-
-            <TextView
-                android:id="@+id/id_item_des_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="120/80"
-                android:textColor="@color/item_description_color"
-                android:textStyle="normal"
-                android:fontFamily="monospace"
-                android:textSize="30sp" />
-
-            <TextView
-                android:id="@+id/id_item_des_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="毫米汞柱"
-                android:textColor="@color/item_description_color"
-                android:textSize="12sp" />
-        </LinearLayout>
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/id_item_info"
-            android:padding="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_below="@id/id_item_description"
             android:layout_centerHorizontal="true"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/id_item_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="血氧"
-                android:textStyle="bold" />
+                android:text="血氧" />
 
             <TextView
                 android:id="@+id/id_last_record_time"
@@ -74,7 +52,7 @@
 
         </LinearLayout>
 
-        <Button
+        <TextView
             android:id="@+id/id_item_btn"
             android:layout_width="match_parent"
             android:layout_height="30dp"
@@ -85,6 +63,7 @@
             android:layout_marginStart="10dp"
             android:background="@drawable/button_background_selector"
             android:text="测量"
+            android:gravity="center"
             android:textColor="@color/item_description_color"
             android:textStyle="bold" />
 
