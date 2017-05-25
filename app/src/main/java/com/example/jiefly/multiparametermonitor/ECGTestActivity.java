@@ -6,9 +6,9 @@ import android.util.Log;
 
 import com.example.jiefly.multiparametermonitor.connection.Connection;
 import com.example.jiefly.multiparametermonitor.connection.OnConnectionListener;
-import com.example.jiefly.multiparametermonitor.measuring.EcgView;
 import com.example.jiefly.multiparametermonitor.measuring.data.EcgData;
 import com.example.jiefly.multiparametermonitor.measuring.parser.BMD101;
+import com.example.jiefly.multiparametermonitor.measuring.view.EcgView;
 
 import java.io.IOException;
 import java.io.InputStream;

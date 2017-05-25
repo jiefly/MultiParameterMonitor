@@ -9,6 +9,8 @@
 	<color name="primary_text_color">#212121</color>
 	<color name="secondary_text_color">#757575</color>
 	<color name="item_description_color">#ff5e00</color>
+    <color name="normal_bg_color">#ededed</color>
+    <color name="normal_white">#FEFEFE</color>
     <!--color for floatMenu-->
     <color name="black_semi_transparent">#77000000</color>
     <color name="background">#e5e5e5</color>

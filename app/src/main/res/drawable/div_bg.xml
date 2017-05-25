@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <size
+        android:height="1px"
+        android:width="100dp" />
+    <padding
+        android:top="1dp"
+        android:bottom="1dp" />
+    <solid android:color="@color/normal_bg_color" />
+</shape>

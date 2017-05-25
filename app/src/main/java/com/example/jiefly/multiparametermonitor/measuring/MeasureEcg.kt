@@ -8,6 +8,7 @@ import com.example.jiefly.multiparametermonitor.R
 import com.example.jiefly.multiparametermonitor.measuring.data.EcgData
 import com.example.jiefly.multiparametermonitor.measuring.parser.BMD101
 import com.example.jiefly.multiparametermonitor.measuring.parser.ParserHelper
+import com.example.jiefly.multiparametermonitor.measuring.view.EcgView
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedQueue
 

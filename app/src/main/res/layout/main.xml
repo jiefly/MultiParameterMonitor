@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/content"
+    android:background="@color/normal_bg_color"
     android:orientation="vertical">
-
     <include
         layout="@layout/self_main_tool_bar"
         android:layout_width="match_parent"

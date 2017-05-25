@@ -1,4 +1,4 @@
-package com.example.jiefly.multiparametermonitor.measuring;
+package com.example.jiefly.multiparametermonitor.measuring.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

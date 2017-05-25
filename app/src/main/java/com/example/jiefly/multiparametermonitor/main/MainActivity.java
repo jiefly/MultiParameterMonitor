@@ -230,16 +230,16 @@ public class MainActivity extends BaseActivity {
                         data.setmItemNameTextRes(R.string.blood_oxygen);
                         data.setmRecord(false);
                         data.setmLastRecordUnit(R.string.blood_oxygen_unit);
-                        data.setmIconRes(R.drawable.ic_oxygen_symbol);
+                        data.setmIconRes(R.drawable.ic_oxygen);
                         break;
                     case BLOOD_PRESSURE:
                         data.setmItemNameTextRes(R.string.blood_pressure);
-                        data.setmIconRes(R.drawable.ic_sphygmomanometer);
+                        data.setmIconRes(R.drawable.ic_blood_pressure);
                         break;
                     case BLOOD_TEMPUTURE:
                         data.setmItemNameTextRes(R.string.temperature);
                         data.setmRecord(false);
-                        data.setmIconRes(R.drawable.ic_thermometer_1);
+                        data.setmIconRes(R.drawable.ic_temputure);
                         data.setmLastRecordUnit(R.string.temperature_unit);
                         data.setmLastRecordTime("4 天前");
                         data.setmRecordInfo("35.7");
@@ -250,7 +250,7 @@ public class MainActivity extends BaseActivity {
                         break;
                     case HEART_RATE:
                         data.setmItemNameTextRes(R.string.heart_rate);
-                        data.setmIconRes(R.drawable.ic_cardiogram);
+                        data.setmIconRes(R.drawable.ic_heart_rate);
                         data.setmRecord(false);
                         break;
                 }

@@ -142,17 +142,17 @@ public class NormalItemData implements Serializable {
         public static String getShowStringByType(Type type) {
             switch (type) {
                 case BLOOD_OX:
-                    return "测量血氧";
+                    return "血氧";
                 case BLOOD_PRESSURE:
-                    return "测量血压";
+                    return "血压";
                 case BLOOD_TEMPUTURE:
-                    return "测量体温";
+                    return "体温";
                 case HEART_RATE:
-                    return "测量心率";
+                    return "心率";
                 case ECG:
-                    return "测量心电";
+                    return "心电";
                 default:
-                    return "未知模块";
+                    return "未知";
             }
         }
 

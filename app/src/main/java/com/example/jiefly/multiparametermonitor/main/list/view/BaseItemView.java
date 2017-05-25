@@ -20,7 +20,7 @@ import com.example.jiefly.multiparametermonitor.main.list.data.NormalItemData;
  * Created by chgao on 17-5-9.
  */
 
-public abstract class BaseItemView extends LinearLayout{
+public abstract class BaseItemView extends LinearLayout {
     public static int INVAILD_ID = -1;
     @LayoutRes
     protected int mIconRes;
@@ -56,12 +56,12 @@ public abstract class BaseItemView extends LinearLayout{
 
     protected abstract int getLayoutRes();
 
-    private void init(Context context){
+    private void init(Context context) {
         mLayoutResId = getLayoutRes();
-        if (mLayoutResId == INVAILD_ID){
+        if (mLayoutResId == INVAILD_ID) {
             mLayoutResId = R.layout.normal_item;
         }
-        inflate(context,mLayoutResId,this);
+        inflate(context, mLayoutResId, this);
 
         initView();
     }
@@ -72,7 +72,8 @@ public abstract class BaseItemView extends LinearLayout{
         mCard = (CardView) findViewById(R.id.id_item_card);
         mIcon = (ImageView) findViewById(R.id.id_item_icon);
     }
-    public void fillData(@NonNull NormalItemData data){
+
+    public void fillData(@NonNull NormalItemData data) {
         mData = data;
         mIcon.setImageResource(data.getmIconRes());
         mConfirmBtn.setText(getResources().getText(data.getmButtonTextRes()));

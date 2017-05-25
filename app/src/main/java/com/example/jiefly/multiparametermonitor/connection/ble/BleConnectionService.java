@@ -70,6 +70,7 @@ public class BleConnectionService extends BaseConnectionService {
                 }
             }
         });
+
         mBluetoothLe.setOnReadCharacteristicListener(new OnLeReadCharacteristicListener() {
             @Override
             public void onSuccess(BluetoothGattCharacteristic characteristic) {
