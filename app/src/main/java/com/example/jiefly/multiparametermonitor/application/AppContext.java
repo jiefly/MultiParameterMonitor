@@ -7,6 +7,8 @@ import android.content.res.Resources;
 import com.qindachang.bluetoothle.BluetoothConfig;
 import com.qindachang.bluetoothle.BluetoothLe;
 
+import cn.jpush.android.api.JPushInterface;
+
 /**
  * Created by chgao on 17-5-8.
  */
@@ -24,6 +26,8 @@ public class AppContext extends Application {
                 .setQueueIntervalTime(150)//设置定时150ms时长（才会发下一条），单位ms
                 .build();
         BluetoothLe.getDefault().init(this, config);
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(instance);
     }
 
     @Override
