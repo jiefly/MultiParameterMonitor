@@ -55,8 +55,12 @@ class MeasureHeartRate : MeasureBaseFragment(), RingView.OnAnimationListener {
         decoration.setDrawable(resources.getDrawable(R.drawable.div_bg))
         recycleView?.addItemDecoration(decoration)
         recycleView?.adapter = adapter
-        for (i in 1..10)
-            adapter?.addData(HeartRateHistoryData().setDate(Date()).setValue(HeartRateData().setRate(100 + i)))
+        var data = HeartRateHistoryData()
+        for (i in 1..10) {
+            data.date = Date()
+            data.value = HeartRateData().setRate(100 + i)
+            adapter?.addData(data)
+        }
         adapter?.notifyDataSetChanged()
     }
 

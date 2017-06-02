@@ -26,27 +26,6 @@
         android:layout_above="@+id/bottom_bar"
         android:layout_below="@+id/id_heart_beat_container" />
 
-    <LinearLayout
-        android:id="@+id/bottom_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/normal_white"
-        android:clickable="true"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:padding="5dp">
-
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/ic_heart_rate" />
-
-        <TextView
-            android:id="@+id/id_bottom_bar_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="开始" />
-    </LinearLayout>
+    <include layout="@layout/include_measure_bottom_bar" />
 
 </RelativeLayout>

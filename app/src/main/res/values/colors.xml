@@ -21,4 +21,13 @@
     <color name="pink_pressed">#ec407a</color>
     <color name="blue_semi_transparent">#805677fc</color>
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
+
+
+    <!--指针左半部分颜色-->
+    <color name="leftPointer">#e1dcd6</color>
+    <!--指针右半部分颜色-->
+    <color name="rightPointer">#f4efe9</color>
+    <!--背景颜色-->
+    <color name="temperatureBackground">#FFFAFA</color>
+
 </resources>

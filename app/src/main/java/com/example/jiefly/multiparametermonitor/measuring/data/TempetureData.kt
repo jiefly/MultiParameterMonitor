@@ -5,4 +5,7 @@ package com.example.jiefly.multiparametermonitor.measuring.data
  */
 open class TempetureData : BaseMeasureData() {
     var temputure = 36.0
+    override var unit: String
+        get() = "℃"
+        set(value) {}
 }
