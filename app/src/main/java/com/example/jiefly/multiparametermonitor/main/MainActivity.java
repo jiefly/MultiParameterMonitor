@@ -191,7 +191,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 mMenu.collapse();
-                startActivity(new Intent(MainActivity.this, RecordActivity.class));
+                startActivity(new Intent(MainActivity.this, com.example.jiefly.multiparametermonitor.record.RecordActivity.class));
             }
         });
         mMenu.findViewById(R.id.id_main_menu_item_3).setOnClickListener(new View.OnClickListener() {

@@ -47,7 +47,7 @@ public class MeasureMain extends BaseActivity {
 
                 break;
             case BLOOD_PRESSURE:
-                transaction.replace(R.id.id_container, new MeasureBloodPresure(), "MeasureBloodPressure");
+                transaction.replace(R.id.id_container, new MeasureBloodPressure(), "MeasureBloodPressure");
                 break;
             case ECG:
                 transaction.replace(R.id.id_container, new MeasureEcg(), "MeasureEcg");

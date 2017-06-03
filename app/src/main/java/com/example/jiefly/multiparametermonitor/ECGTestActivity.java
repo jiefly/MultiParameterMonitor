@@ -42,7 +42,7 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
         write = lock.newCondition();
         read = lock.newCondition();
         setContentView(R.layout.activity_ecgtest);
-        loadDatafromBin();
+        loadDataFromBin();
         simulator();
 //        mConnection= ConnectionManager.getInstance().getConnectionListener();
 //        if (mConnection != null){
@@ -78,9 +78,9 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
         }, 0, 2);
     }
 
-    private void loadDatafromBin() {
+    private void loadDataFromBin() {
         try {
-            InputStream in = getResources().openRawResource(R.raw.ecg_bin);
+            InputStream in = getResources().openRawResource(R.raw.ecg_data_nanfu);
             int len = in.available();
             List<Integer> datas = new ArrayList<>();
             for (int i = 0; i < len; i++) {
@@ -89,14 +89,14 @@ public class ECGTestActivity extends AppCompatActivity implements OnConnectionLi
             List<EcgData> data = new BMD101().parserEcgData(datas);
             ArrayList<Double> filters = new ArrayList<>();
             for (EcgData ecgData : data) {
-                filters.add((double) ecgData.getRealValue() + 10000);
+                filters.add((double) ecgData.getRealValue());
             }
             filters = new KalmanFilter(filters).calc();
             for (EcgData ecgData : data) {
-                data1Q.add((int) ecgData.getRealValue() + 10000);
+                data1Q.add((int) ecgData.getRealValue());
             }
             for (double x : filters) {
-                data0Q.add((int) x);
+                //data0Q.add((int) x);
                 Log.i("parsered", "实时数据" + x);
             }
         } catch (IOException e) {

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_ecg"
+        android:title="心电" />
+
+    <item
+        android:id="@+id/navigation_dashboard"
+        android:icon="@drawable/ic_blood_pressure"
+        android:title="血压" />
+
+    <item
+        android:id="@+id/navigation_notifications"
+        android:icon="@drawable/ic_oxygen"
+        android:title="血氧" />
+    <item
+        android:id="@+id/navigation_heart_rate"
+        android:icon="@drawable/medical_heart"
+        android:title="心率" />
+    <item
+        android:id="@+id/navigation_tem"
+        android:icon="@drawable/ic_thermometer"
+        android:title="温度" />
+
+</menu>
