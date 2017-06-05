@@ -89,17 +89,17 @@ class RecordActivity : AppCompatActivity() {
         mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    fragmentCollection[0].setTitle("心电")
+                    //fragmentCollection[0].setTitle("心电")
                     viewpager!!.currentItem = 0
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_dashboard -> {
-                    fragmentCollection[1].setTitle("血压")
+                    //fragmentCollection[1].setTitle("血压")
                     viewpager!!.currentItem = 1
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_notifications -> {
-                    fragmentCollection[2].setTitle("血氧")
+                    //fragmentCollection[2].setTitle("血氧")
                     viewpager!!.currentItem = 2
                     return@OnNavigationItemSelectedListener true
                 }
@@ -109,7 +109,7 @@ class RecordActivity : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_tem -> {
-                    fragmentCollection[4].setTitle("体温")
+                    //fragmentCollection[4].setTitle("体温")
                     viewpager!!.currentItem = 4
                     return@OnNavigationItemSelectedListener true
                 }
