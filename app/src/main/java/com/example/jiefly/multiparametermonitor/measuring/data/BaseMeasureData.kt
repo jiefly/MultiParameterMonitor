@@ -5,4 +5,7 @@ package com.example.jiefly.multiparametermonitor.measuring.data
  */
 open class BaseMeasureData {
     open var unit: String = ""
+    open fun getShowing(): String {
+        return ""
+    }
 }

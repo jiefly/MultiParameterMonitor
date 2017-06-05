@@ -27,4 +27,8 @@ open class OxData : BaseMeasureData() {
     此值主要受PO2的影响，两者之间呈氧合Hb解离曲线的关系。
     正常动脉血氧饱和度为 93%-98% ；静脉血氧饱和度为 70%-75%。*/
     var SO2: Float = 0F
+
+    override fun getShowing(): String {
+        return PO2.toString()
+    }
 }

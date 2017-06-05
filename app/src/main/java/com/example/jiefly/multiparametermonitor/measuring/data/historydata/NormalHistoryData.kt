@@ -1,13 +1,14 @@
 package com.example.jiefly.multiparametermonitor.measuring.data.historydata
 
 import android.annotation.SuppressLint
+import com.example.jiefly.multiparametermonitor.measuring.data.BaseMeasureData
 import java.text.SimpleDateFormat
 import java.util.*
 
 /**
  * Created by chgao on 17-5-25.
  */
-open class NormalHistoryData<D> {
+open class NormalHistoryData<D : BaseMeasureData> {
     var date: Date = Date()
     var value: D? = null
 
