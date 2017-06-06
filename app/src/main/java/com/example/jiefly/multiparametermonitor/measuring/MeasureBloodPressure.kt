@@ -133,10 +133,10 @@ class MeasureBloodPressure : MeasureBaseFragment() {
 
         val set1: LineDataSet
 
-        if (chart.getData() != null && chart.getData().getDataSetCount() > 0) {
-            set1 = chart.getData().getDataSetByIndex(0) as LineDataSet
+        if (chart.data != null && chart.data.dataSetCount > 0) {
+            set1 = chart.data.getDataSetByIndex(0) as LineDataSet
             set1.values = values
-            chart.getData().notifyDataChanged()
+            chart.data.notifyDataChanged()
             chart.notifyDataSetChanged()
         } else {
             // create a dataset and give it a type
@@ -167,7 +167,7 @@ class MeasureBloodPressure : MeasureBaseFragment() {
             val data = LineData(dataSets)
 
             // set data
-            chart.setData(data)
+            chart.data = data
         }
     }
 

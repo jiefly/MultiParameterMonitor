@@ -11,7 +11,6 @@ import android.view.MenuItem
 import android.widget.TextView
 import com.example.jiefly.multiparametermonitor.R
 import com.example.jiefly.multiparametermonitor.record.fragment.BaseRecordItemFragment
-import com.example.jiefly.multiparametermonitor.record.fragment.HeartRateRecordFragment
 
 class RecordActivity : AppCompatActivity() {
     private var mOnNavigationItemSelectedListener: BottomNavigationView.OnNavigationItemSelectedListener? = null
@@ -76,11 +75,7 @@ class RecordActivity : AppCompatActivity() {
 
     private fun initFragmentData() {
         for (i in 0..4) {
-            if (i == 3) {
-                fragmentCollection.add(HeartRateRecordFragment())
-            } else {
-                fragmentCollection.add(BaseRecordItemFragment())
-            }
+            fragmentCollection.add(BaseRecordItemFragment())
         }
     }
 

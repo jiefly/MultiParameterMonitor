@@ -20,9 +20,9 @@ class HeartRateRecordFragment : BaseRecordItemFragment() {
     var recycleView1: RecyclerView? = null
     var adapter1: HeartRateRvAdapter? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater!!.inflate(R.layout.fragment_heart_reate_record_item, container, false)
+        val view = inflater!!.inflate(getLayoutRes(), container, false)
 
-        recycleView1 = view.findViewById(R.id.id_record_blood_pressure_rv) as RecyclerView
+        recycleView1 = view.findViewById(R.id.id_normal_history_rv) as RecyclerView
         initRv()
         return view
     }
