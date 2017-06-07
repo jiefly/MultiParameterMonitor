@@ -51,9 +51,15 @@ class MeasureTemperature : MeasureBaseFragment() {
         recycleView?.addItemDecoration(decoration)
         recycleView?.adapter = adapter
         var data = TemperatureHistoryData()
-        for (i in 1..10) {
-            data.date = Date()
+        for (i in 1..4) {
+            data = TemperatureHistoryData()
+            data.date = Date(System.currentTimeMillis() - 60 * 1000 * Random().nextInt(10) - i * 10 * 60 * 1000)
             data.value = TempetureData()
+            if (Random().nextBoolean()) {
+                data.value!!.temputure = 36.7
+            } else {
+                data.value!!.temputure = 36.6
+            }
             adapter?.addData(data)
         }
         adapter?.notifyDataSetChanged()

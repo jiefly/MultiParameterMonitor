@@ -1,5 +1,7 @@
 package com.example.jiefly.multiparametermonitor.record.fragment
 
+import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.DividerItemDecoration
@@ -15,6 +17,8 @@ import com.example.jiefly.multiparametermonitor.measuring.data.BaseMeasureData
 import com.example.jiefly.multiparametermonitor.measuring.data.historydata.NormalHistoryData
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import java.util.*
 import kotlin.collections.ArrayList
@@ -43,10 +47,19 @@ open class BaseRecordItemFragment : Fragment() {
     }
 
     private fun initChart() {
+        initLineDatas()
         val setCollection = ArrayList<ILineDataSet>()
-        for (i in 1..lineNum()) {
-
+        for ((key, value) in dataCollection) {
+            setCollection.add(initLine(value, key))
         }
+        lineChart!!.description.text = getChartDes()
+        lineChart?.data = LineData(setCollection)
+        lineChart?.data?.notifyDataChanged()
+        lineChart?.notifyDataSetChanged()
+    }
+
+    private fun initLineDatas() {
+
     }
 
     private fun initRv() {
@@ -56,13 +69,18 @@ open class BaseRecordItemFragment : Fragment() {
         recycleView!!.addItemDecoration(decoration)
         adapter = BaseRvAdapter(activity)
         recycleView!!.adapter = adapter
+        val chartData = ArrayList<Entry>()
         var data = NormalHistoryData<BaseMeasureData>()
-        for (i in 1..10) {
-            data.date = Date()
+        for (i in 1..4) {
+            data = NormalHistoryData<BaseMeasureData>()
+            data.date = Date(System.currentTimeMillis() - 60 * 1000 * Random().nextInt(10) - i * 10 * 60 * 1000)
             data.value = BaseMeasureData()
-            data.value?.value = "${100 + i}"
+            data.value?.unit = "%"
+            data.value?.value = "${98 + Random().nextInt(2) - 1}"
+            chartData.add(Entry(i.toFloat(), data.value?.value!!.toFloat()))
             adapter?.addData(data)
         }
+        dataCollection.put("血氧", chartData)
         adapter?.notifyDataSetChanged()
 
     }
@@ -78,6 +96,30 @@ open class BaseRecordItemFragment : Fragment() {
 
     open fun lineNum(): Int {
         return 1
+    }
+
+    open fun initLine(datas: ArrayList<Entry>, title: String): LineDataSet {
+        val set1 = LineDataSet(datas, title)
+        set1.setDrawValues(false)
+        set1.enableDashedLine(10f, 5f, 0f)
+        set1.enableDashedHighlightLine(10f, 5f, 0f)
+        set1.color = Color.BLACK
+        set1.setCircleColor(Color.BLACK)
+        set1.lineWidth = 1f
+        set1.circleRadius = 3f
+        set1.setDrawCircleHole(true)
+        set1.valueTextSize = 9f
+        set1.setDrawFilled(true)
+        set1.formLineWidth = 1f
+        set1.formLineDashEffect = DashPathEffect(floatArrayOf(10f, 5f), 0f)
+        set1.formSize = 10f
+        set1.fillAlpha = 0
+        set1.mode = LineDataSet.Mode.CUBIC_BEZIER
+        return set1
+    }
+
+    open fun getChartDes(): String {
+        return "血氧数据"
     }
 
 }

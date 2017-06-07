@@ -1,6 +1,7 @@
 package com.example.jiefly.multiparametermonitor.measuring
 
 import android.os.Bundle
+import android.support.v7.widget.CardView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,8 @@ class MeasureEcg : MeasureBaseFragment() {
     private val DATA_GET_FREQUENCY = 16L
     private val dataPool: Queue<Int>
     private val timer: Timer = Timer()
+    var analyse: CardView? = null
+    var start: CardView? = null
 
     init {
         dataPool = ConcurrentLinkedQueue<Int>()
@@ -26,7 +29,17 @@ class MeasureEcg : MeasureBaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         mock()
-        return inflater!!.inflate(R.layout.fragment_measure_ecg, container, false)
+        val view = inflater!!.inflate(R.layout.fragment_measure_ecg, container, false)
+        initView(view)
+        return view
+    }
+
+    private fun initView(view: View) {
+        start = view.findViewById(R.id.id_measure_ecg_start_measure) as CardView
+        analyse = view.findViewById(R.id.id_measure_ecg_any) as CardView
+        analyse!!.setOnClickListener {
+            showAlertDialog("分析结果", "您当前的心率正常", null, null)
+        }
     }
 
     private fun simulator() {

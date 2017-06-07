@@ -1,9 +1,13 @@
 package com.example.jiefly.multiparametermonitor.measuring
 
+import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
+import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,11 +39,39 @@ abstract class MeasureBaseFragment : OnConnectionListener<Any>, Fragment() {
 
     }
 
+    inline fun showToast(message: String?) {
+        Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+
+    }
+
+    inline fun showSnack(view: View, message: String?) {
+        Snackbar.make(view, message.toString(), Snackbar.LENGTH_SHORT).show()
+    }
+
+    inline fun showAlertDialog(title: String?, message: String?, positive: DialogInterface.OnClickListener?, negative: DialogInterface.OnClickListener?) {
+        val builder = AlertDialog.Builder(activity)
+        builder.setTitle(title)
+        builder.setMessage(message)
+        builder.setNegativeButton("取消", negative)
+        builder.setPositiveButton("确定", positive)
+        builder.show()
+    }
+
+    inline fun <reified T : Activity> Activity.navigate(bundle: Bundle? = null) {
+        val intent = Intent()
+        intent.setClass(this, T::class.java)
+        if (bundle != null) {
+            intent.putExtras(bundle)
+        }
+        startActivity(intent)
+    }
+
     open fun mock() {
         if (!debug())
             return
 
     }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_measure_incompleted, container, false)
     }

@@ -28,6 +28,17 @@ open class OxData : BaseMeasureData() {
     正常动脉血氧饱和度为 93%-98% ；静脉血氧饱和度为 70%-75%。*/
     var SO2: Float = 0F
 
+    fun setFloat(value: Float): OxData {
+        PO2 = value
+        return this
+    }
+
+    override var unit: String
+        get() = "%"
+        set(value) {
+            this.unit = value
+        }
+
     override fun getShowing(): String {
         return PO2.toString()
     }

@@ -14,6 +14,8 @@ import com.example.jiefly.multiparametermonitor.measuring.adapter.HeartRateRvAda
 import com.example.jiefly.multiparametermonitor.measuring.data.HeartRateData
 import com.example.jiefly.multiparametermonitor.measuring.data.historydata.HeartRateHistoryData
 import com.example.jiefly.multiparametermonitor.measuring.view.RingView
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
 import java.util.*
 
 /**
@@ -56,20 +58,21 @@ class MeasureHeartRate : MeasureBaseFragment(), RingView.OnAnimationListener {
         recycleView?.addItemDecoration(decoration)
         recycleView?.adapter = adapter
         var data = HeartRateHistoryData()
-        for (i in 1..10) {
-            data.date = Date()
-            data.value = HeartRateData().setRate(100 + i)
+        for (i in 1..5) {
+            data = HeartRateHistoryData()
+            data.date = Date(System.currentTimeMillis() - 60 * 1000 * Random().nextInt(10) - i * 10 * 60 * 1000)
+            data.value = HeartRateData().setRate(74 + Random().nextInt(i))
             adapter?.addData(data)
         }
         adapter?.notifyDataSetChanged()
     }
 
     override fun onAnimationEnd() {
-        bottomTextView?.text = "开始"
+        Observable.just("开始").observeOn(AndroidSchedulers.mainThread()).subscribe { bottomTextView?.text = it }
     }
 
     override fun onAnimationStart() {
-        bottomTextView?.text = "停止"
+        Observable.just("停止").observeOn(AndroidSchedulers.mainThread()).subscribe { bottomTextView?.text = it }
     }
 
     override fun onDataReceived(data: ByteArray?) {

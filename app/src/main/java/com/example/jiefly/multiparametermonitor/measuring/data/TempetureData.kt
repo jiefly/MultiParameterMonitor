@@ -8,4 +8,5 @@ open class TempetureData : BaseMeasureData() {
     override var unit: String
         get() = "℃"
         set(value) {}
+
 }

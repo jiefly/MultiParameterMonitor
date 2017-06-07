@@ -9,7 +9,7 @@ import java.util.*
  * Created by chgao on 17-5-25.
  */
 open class NormalHistoryData<D : BaseMeasureData> {
-    var date: Date = Date()
+    var date: Date? = Date()
     var value: D? = null
 
     fun dateDetail(year: Boolean = false, month: Boolean = true, day: Boolean = true, hour: Boolean = true, min: Boolean = true, second: Boolean = false): String? {

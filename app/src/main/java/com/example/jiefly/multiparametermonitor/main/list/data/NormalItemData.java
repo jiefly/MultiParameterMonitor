@@ -115,7 +115,7 @@ public class NormalItemData implements Serializable {
     }
 
     public boolean isValueShowHorizontal() {
-        return mType == Type.BLOOD_TEMPUTURE || mType == Type.HEART_RATE;
+        return mType == Type.BLOOD_TEMPUTURE || mType == Type.HEART_RATE || mType == Type.BLOOD_OX;
     }
 
     public Type getmType() {

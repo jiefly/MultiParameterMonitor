@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.jiefly.multiparametermonitor.R
 import com.example.jiefly.multiparametermonitor.measuring.adapter.BaseRvAdapter
@@ -33,9 +34,10 @@ class MeasureOx : MeasureBaseFragment() {
     var progressText: TextView? = null
     var timer: Timer? = null
     var progressIndex = 0
+    var bottomBar: LinearLayout? = null
+    var bottomTextView: TextView? = null
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater!!.inflate(R.layout.fragment_measure_ox, container, false)
-        initTimer()
         initView(view)
         return view
     }
@@ -49,13 +51,15 @@ class MeasureOx : MeasureBaseFragment() {
                     return@Func1 it.toFloat()
                 }).observeOn(AndroidSchedulers.mainThread()).subscribe {
                     progress!!.setProgressWithAnimation(progressIndex.toFloat(), 100)
+                    progressIndex++
+                    if (progressIndex == 101) {
+                        setBottomBarText("开始")
+                        adapter!!.addData(NormalHistoryData<OxData>())
+                        adapter!!.notifyItemInserted(0)
+                        cancel()
+                    }
                 }
-                progressIndex++
-                if (progressIndex == 101) {
-                    adapter!!.addData(NormalHistoryData<OxData>())
-                    adapter!!.notifyItemInserted(0)
-                    cancel()
-                }
+
             }
         }, 10, 10 * MEASURE_TIME.toLong())
     }
@@ -66,7 +70,27 @@ class MeasureOx : MeasureBaseFragment() {
         }
     }
 
+    private fun setBottomBarText(value: String) {
+        Observable.just(value).observeOn(AndroidSchedulers.mainThread()).subscribe {
+            bottomTextView?.text = it
+        }
+    }
+
     private fun initView(view: View) {
+        bottomBar = view.findViewById(R.id.bottom_bar) as LinearLayout
+        bottomTextView = bottomBar?.findViewById(R.id.id_bottom_bar_text) as TextView
+        bottomBar?.setOnClickListener {
+
+            if (progressIndex == 0) {
+                setBottomBarText("停止")
+                timer?.cancel()
+                initTimer()
+            } else {
+                setBottomBarText("开始")
+                progressIndex = 0
+                timer?.cancel()
+            }
+        }
         recycleView = view.findViewById(R.id.id_ox_rv) as RecyclerView
         initRV()
         progress = view.findViewById(R.id.id_measure_ox_progress) as CircularProgressBar?
@@ -87,9 +111,10 @@ class MeasureOx : MeasureBaseFragment() {
         recycleView?.addItemDecoration(decoration)
         recycleView!!.adapter = adapter
         var data = NormalHistoryData<OxData>()
-        for (i in 1..3) {
-            data.date = Date()
-            data.value = OxData()
+        for (i in 1..4) {
+            data = NormalHistoryData<OxData>()
+            data.date = Date(System.currentTimeMillis() - 60 * 1000 * Random().nextInt(10) - i * 10 * 60 * 1000)
+            data.value = OxData().setFloat((97 + Random().nextInt(2)).toFloat())
             adapter?.addData(data)
         }
         adapter?.notifyDataSetChanged()

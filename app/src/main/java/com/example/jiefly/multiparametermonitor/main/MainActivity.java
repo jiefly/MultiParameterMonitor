@@ -23,8 +23,6 @@ import com.example.jiefly.multiparametermonitor.util.ObjectHelper;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-import org.tensorflow.demo.ClassifierActivity;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -198,7 +196,18 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 mMenu.collapse();
-                startActivity(new Intent(MainActivity.this, ClassifierActivity.class));
+
+                showAlert("退出程序", "是否确认退出", "确定", "取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                }, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
             }
         });
     }
@@ -229,6 +238,7 @@ public class MainActivity extends BaseActivity {
                     case BLOOD_OX:
                         data.setmItemNameTextRes(R.string.blood_oxygen);
                         data.setmRecord(true);
+                        data.setmRecordInfo("98");
                         data.setmLastRecordUnit(R.string.blood_oxygen_unit);
                         data.setmIconRes(R.drawable.ic_oxygen);
                         break;
@@ -244,7 +254,7 @@ public class MainActivity extends BaseActivity {
                         data.setmIconRes(R.drawable.ic_temputure);
                         data.setmLastRecordUnit(R.string.temperature_unit);
                         data.setmLastRecordTime("4 天前");
-                        data.setmRecordInfo("35.7");
+                        data.setmRecordInfo("36.7");
                         break;
                     case ECG:
                         data.setmItemNameTextRes(R.string.ecg);
@@ -254,7 +264,7 @@ public class MainActivity extends BaseActivity {
                         data.setmItemNameTextRes(R.string.heart_rate);
                         data.setmIconRes(R.drawable.ic_heart_rate);
                         data.setmLastRecordTime("1 分钟前");
-                        data.setmRecordInfo("65");
+                        data.setmRecordInfo("78");
                         data.setmLastRecordUnit(R.string.heart_rate_unit);
                         data.setmRecord(true);
                         break;

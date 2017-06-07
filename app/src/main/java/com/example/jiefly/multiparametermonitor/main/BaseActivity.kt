@@ -24,6 +24,6 @@ open class BaseActivity : AppCompatActivity() {
     }
 
     open fun debug(): Boolean {
-        return false
+        return true
     }
 }

@@ -9,8 +9,7 @@
         android:id="@+id/id_record_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:text="2月23日 17:04" />
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/id_heart_rate_value"
