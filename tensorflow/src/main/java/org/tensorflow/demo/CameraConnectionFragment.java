@@ -73,7 +73,6 @@ public class CameraConnectionFragment extends Fragment {
    * containing a DESIRED_SIZE x DESIRED_SIZE square.
    */
   private static final int MINIMUM_PREVIEW_SIZE = 320;
-
   /**
    * Conversion from screen rotation to JPEG orientation.
    */

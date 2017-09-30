@@ -34,7 +34,7 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
     private Context mContext;
     private SurfaceHolder surfaceHolder;
     private Canvas mCanvas;
-    private float ecgMax = 4096;//心电的最大值
+    private static float ecgMax = 4096;//心电的最大值
     private int wave_speed = 25;//波速: 25mm/
     private int sleepTime = 16; //每次锁屏的时间间距，单位:ms
     private float lockWidth;//每次锁屏需要画的
@@ -86,7 +86,12 @@ public class EcgView extends SurfaceView implements SurfaceHolder.Callback {
     public static void addEcgData0(int data) {
         ecg0Datas.add(data);
     }
-
+    public static void addEcgData0(float data){
+        ecg0Datas.add((int) (ecgMax/2+3*data*ecgMax));
+    }
+    public static void addEcgData1(float data) {
+        ecg1Datas.add((int) (ecgMax/2+3*data*ecgMax));
+    }
     public static void addEcgData1(int data) {
         ecg1Datas.add(data);
     }

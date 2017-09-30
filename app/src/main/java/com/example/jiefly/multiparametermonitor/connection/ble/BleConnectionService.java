@@ -29,6 +29,25 @@ public class BleConnectionService extends BaseConnectionService {
     public BleConnectionService() {
         mBluetoothLe = BluetoothLe.getDefault();
         mBluetoothLe.setOnConnectListener(new OnLeConnectListener() {
+            //service_1
+            //00001800-0000-1000-8000-00805f9b34fb
+            //characteristic_1
+            //00002a00-0000-1000-8000-00805f9b34fb
+            //characteristic_2
+            //00002a01-0000-1000-8000-00805f9b34fb
+            //service_2
+            //12b690e0-b034-11e4-96db-0002a5d5c51b
+            //characteristic_1
+            //1ef63f40-b034-11e4-85df-0002a5d5c51b
+            //characteristic_2
+            //1921f000-b034-11e4-b245-0002a5d5c51b
+            public static final String TEST_SERVICE_1 = "00001800-0000-1000-8000-00805f9b34fb";
+            public static final String TEST_SERVICE_CHAR_1 = "00002a00-0000-1000-8000-00805f9b34fb";
+            public static final String TEST_SERVICE_CHAR_2 = "00002a01-0000-1000-8000-00805f9b34fb";
+            public static final String TEST_SERVICE_2 = "12b690e0-b034-11e4-96db-0002a5d5c51b";
+            public static final String TEST_SERVICE_CHAR_3 = "1ef63f40-b034-11e4-85df-0002a5d5c51b";
+            public static final String TEST_SERVICE_CHAR_4 = "1921f000-b034-11e4-b245-0002a5d5c51b";
+
             @Override
             public void onDeviceConnecting() {
                 Log.i(TAG, "设备连接中...");
@@ -54,12 +73,15 @@ public class BleConnectionService extends BaseConnectionService {
             @Override
             public void onServicesDiscovered(BluetoothGatt gatt) {
                 Log.i(TAG, "发现服务");
-                mIOCharacteristic = gatt.getService(UUID.fromString(UUIDInfo.SERVICE_IO)).getCharacteristic(UUID.fromString(UUIDInfo.CHARACTERISTIC_IO));
+                /*mIOCharacteristic = gatt.getService(UUID.fromString(UUIDInfo.SERVICE_IO)).getCharacteristic(UUID.fromString(UUIDInfo.CHARACTERISTIC_IO));
                 enableReceiveData(gatt, mIOCharacteristic);
                 mIOGatt = gatt;
                 for (OnConnectionListener listener : mConnectionListeners) {
                     listener.onDeviceConnected();
-                }
+                }*/
+                mIOCharacteristic = gatt.getService(UUID.fromString(TEST_SERVICE_1)).getCharacteristic(UUID.fromString(TEST_SERVICE_CHAR_1));
+                mIOGatt = gatt;
+                sendData("hello jie");
             }
 
             @Override

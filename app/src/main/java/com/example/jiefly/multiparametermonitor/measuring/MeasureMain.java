@@ -52,6 +52,9 @@ public class MeasureMain extends BaseActivity {
             case ECG:
                 transaction.replace(R.id.id_container, new MeasureEcg(), "MeasureEcg");
                 break;
+            case All:
+                transaction.replace(R.id.id_container, new MeasureAll(), "MeasureAll");
+                break;
             default:
                 Log.w(TAG, "unKnow measure type");
                 return;

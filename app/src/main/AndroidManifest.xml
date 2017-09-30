@@ -46,7 +46,7 @@
         </activity>
         <activity android:name=".connection.ConnectionActivity" />
         <activity android:name=".measuring.MeasureMain" />
-        <activity android:name=".ECGTestActivity">
+        <activity android:name=".test.ECGTestActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

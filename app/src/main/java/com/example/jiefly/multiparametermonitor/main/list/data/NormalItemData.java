@@ -127,7 +127,7 @@ public class NormalItemData implements Serializable {
     }
 
     public enum Type {
-        UNKNOW(0), BLOOD_PRESSURE(1), BLOOD_TEMPUTURE(2), HEART_RATE(3), BLOOD_OX(4), ECG(5);
+        UNKNOW(0), BLOOD_PRESSURE(1), BLOOD_TEMPUTURE(2), HEART_RATE(3), BLOOD_OX(4), ECG(5),All(6);
         private int value = 0;
 
         Type(int value) {
@@ -155,6 +155,8 @@ public class NormalItemData implements Serializable {
                     return "心率";
                 case ECG:
                     return "心电";
+                case All:
+                    return "检测中";
                 default:
                     return "未知";
             }

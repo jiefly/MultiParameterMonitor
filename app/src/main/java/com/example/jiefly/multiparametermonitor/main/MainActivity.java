@@ -75,11 +75,6 @@ public class MainActivity extends BaseActivity {
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    public boolean debug() {
-        return true;
-    }
-
     private void jumpToMeasure(NormalItemData.Type type) {
         Intent intent = new Intent(this, MeasureMain.class);
         intent.putExtra(MeasureMain.MEASURE_TYPE, type.getValue());
@@ -115,7 +110,9 @@ public class MainActivity extends BaseActivity {
                 case CONNECTION:
                     break;
                 case CONNECTION_AND_TO_MEASURE:
-                    startActivity(new Intent(MainActivity.this, MeasureMain.class).putExtra(MeasureMain.MEASURE_TYPE, mWillMeasureType.getValue()));
+                    if (ConnectionManager.getInstance().isConnected()) {
+                        startActivity(new Intent(MainActivity.this, MeasureMain.class).putExtra(MeasureMain.MEASURE_TYPE, mWillMeasureType.getValue()));
+                    }
                     break;
                 default:
             }
@@ -268,6 +265,9 @@ public class MainActivity extends BaseActivity {
                         data.setmLastRecordUnit(R.string.heart_rate_unit);
                         data.setmRecord(true);
                         break;
+                    case All:
+                        data.setmItemNameTextRes(R.string.measure_all);
+                        data.setmIconRes(R.mipmap.monitor);
                 }
                 datas.add(data);
             }

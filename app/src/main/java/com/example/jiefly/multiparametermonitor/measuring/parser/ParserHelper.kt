@@ -17,6 +17,12 @@ class ParserHelper {
         }
         return EcgData()
     }
+    fun parserEcg( mock: Boolean = false): EcgData {
+        if (mock) {
+            return MockEcgData()
+        }
+        return EcgData()
+    }
 
     fun parserTemperature(data: ByteArray, mock: Boolean = false): TempetureData {
         return TempetureData()

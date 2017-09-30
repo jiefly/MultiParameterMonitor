@@ -1,6 +1,8 @@
 package com.example.jiefly.multiparametermonitor.measuring.parser
 
+import android.util.Log
 import android.util.Log.e
+import android.util.Log.i
 import com.example.jiefly.multiparametermonitor.measuring.data.EcgData
 
 /**
@@ -41,6 +43,7 @@ class BMD101 {
         var ecg: EcgData
         var unitLen = 0
         var checkSum = 0
+        var maxEcgValue = 0F
         loop@ for (unit in units) {
             if (unit.size < MIN_UNIT_LEN || unit.size > MAX_UNIT_LEN) {
                 e(TAG, "unit len is wrong,size:$unitLen did't range in [ $MIN_UNIT_LEN,$MAX_UNIT_LEN ]")
@@ -94,6 +97,7 @@ class BMD101 {
                             }
 
                             ecg.realValue = value.toFloat()
+                            if (maxEcgValue<Math.abs(ecg.realValue)) maxEcgValue = Math.abs(ecg.realValue)
                         }
                         if (ecg.realValue > 4096)
                             e(TAG, "${unit[i + 2]}:${unit[i + 3]}:value:$value")
@@ -116,6 +120,9 @@ class BMD101 {
                 }
             }
             result.add(ecg)
+        }
+        for (data in result){
+            data.realValue = data.realValue/maxEcgValue
         }
         return result
     }

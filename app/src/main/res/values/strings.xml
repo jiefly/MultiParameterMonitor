@@ -1,8 +1,9 @@
 <resources>
-    <string name="app_name">智能监护仪</string>
+    <string name="app_name">多参数监护</string>
     <string name="unknow">未知</string>
     <string name="blood_pressure">血压</string>
     <string name="heart_rate">心率</string>
+    <string name="measure_all">监护</string>
     <string name="blood_oxygen">血氧</string>
     <string name="temperature">体温</string>
     <string name="ecg">心电图</string>
